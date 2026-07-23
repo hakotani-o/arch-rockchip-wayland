@@ -22,11 +22,6 @@ jobs:
       - name: all
         run: |
           chmod +x *.sh
-          chmod 0600 etc/pacman.conf
-          chmod 0777 etc/pacman.d
-          chmod 0644 etc/pacman.d/mirrorlist
-          ls -lR etc
-          ls -lR keyrings
           ./control-main.sh
             echo "============================"
             ls -l
