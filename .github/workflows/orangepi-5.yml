@@ -22,7 +22,7 @@ jobs:
       - name: all
         run: |
           chmod +x *.sh
-          chmod 0644 etc/pacman.conf
+          chmod 0600 etc/pacman.conf
           chmod 0777 etc/pacman.d
           chmod 0644 etc/pacman.d/mirrorlist
           ls -lR etc
