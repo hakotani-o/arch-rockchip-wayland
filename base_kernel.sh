@@ -12,7 +12,7 @@ sudo apt install -y arch-install-scripts archlinux-keyring pacman-package-manage
 sudo cp  -a keyrings /usr/share/
 sudo pacman-key --init
 sudo pacman-key --populate archlinuxarm
-sudo pacman -S --noconfirm --need arch-install-scripts
+sudo pacman -S --noconfirm arch-install-scripts
 sudo pacman -Syyu
 
 rm -rf linux-aarch64-*
