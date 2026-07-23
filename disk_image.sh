@@ -45,7 +45,7 @@ export  LANG=C
 
 # ホスト環境（ビルドを回しているPC）に必要なツール
 
-sudo apt-get update && sudo apt-get -y install uuid-runtime 
+sudo apt-get update && sudo apt-get -y install uuid-runtime  libarchive-tools
 
 rootfs="./Arch-linux.rootfs.tar.gz"
 rootfs="$(readlink -f "$rootfs")"
