@@ -54,7 +54,7 @@ jobs:
           body: |
             Arch linux Rockchip Wayland ディスクイメージ Orange Pi 5 / 5-PLUS 
             ビルド日時: ${{ steps.date.outputs.now }}
-            iカーネル : ${{ steps.kernel.outputs.kernel_version }}
+            カーネル : ${{ steps.kernel.outputs.kernel_version }}
           draft: false
           prerelease: false
           # ここに圧縮済みファイルのパスを指定します
