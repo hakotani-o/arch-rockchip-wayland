@@ -13,8 +13,9 @@ sudo cp etc/pacman.conf /etc
 sudo cp  -a keyrings /usr/share/
 sudo pacman-key --init
 sudo pacman-key --populate archlinuxarm
-sudo pacman -S --noconfirm arch-install-scripts
 sudo pacman -Syyu
+sudo pacman -S --noconfirm arch-install-scripts
+
 
 rm -rf linux-aarch64-*
 rm -rf base_camp && mkdir base_camp
