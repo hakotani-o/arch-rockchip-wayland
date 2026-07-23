@@ -11,11 +11,11 @@ fi
 # コンテナの初期設定（root権限で実行）
 pacman-key --init
 cp -a keyrings /usr/share/pacman 2>/dev/null || true
-pacman-key --populate --need archlinuxarm
+pacman-key --populate archlinuxarm
 pacman -Syyu --noconfirm
 
 # 必要なパッケージのインストール
-pacman -S --noconfirm --need sudo pacman-contrib
+pacman -S --noconfirm sudo pacman-contrib
 
 # ビルド用一般ユーザー「builder」の作成とsudo権限付与
 useradd -m -G wheel builder
