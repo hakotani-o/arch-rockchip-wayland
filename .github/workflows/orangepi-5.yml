@@ -22,7 +22,7 @@ jobs:
       - name: all
         run: |
           chmod +x *.sh
-          chmod o644 etc/pacman.conf
+          chmod 0644 etc/pacman.conf
           ./control-main.sh
             echo "============================"
             ls -l
