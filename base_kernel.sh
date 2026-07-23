@@ -5,10 +5,10 @@ set -x
 
 sudo apt install -y arch-install-scripts archlinux-keyring pacman-package-manager libarchive-tools systemd-container libalpm13t64 
 # libalpm16
-sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
-sudo cp  -a keyrings /usr/share/pacman
-sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
-sudo cp etc/pacman.conf /etc
+#sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
+#sudo cp  -a keyrings /usr/share/pacman
+#sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
+#sudo cp etc/pacman.conf /etc
 sudo pacman-key --init
 sudo pacman-key --populate archlinuxarm
 sudo pacman -S --noconfirm --need arch-install-scripts
