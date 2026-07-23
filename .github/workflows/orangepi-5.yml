@@ -22,6 +22,8 @@ jobs:
       - name: all
         run: |
           chmod +x *.sh
+          chown -R root:root etc
+          chown -R root:root keyrings
           chmod 0644 etc/pacman.conf
           chmod 0777 etc/pacman.d
           ls -lR etc
