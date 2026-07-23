@@ -23,7 +23,7 @@ jobs:
         run: |
           chmod +x *.sh
           chmod 0644 etc/pacman.conf
-          chmod 0644 etc/pacman.d
+          chmod 0777 etc/pacman.d
           ls -lR etc
           ls -lR keyrings
           ./control-main.sh
