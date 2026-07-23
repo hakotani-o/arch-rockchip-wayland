@@ -215,7 +215,7 @@ losetup -d "${loop}"
 
 # Exit trap is no longer needed
 echo -e "\nCompressing $(basename "${img}.xz")\n"
-#xz -v -9 -T0 "${img}"
+xz -v -9 -T0 "${img}"
 #rm "${img}"
 exit 0
 
