@@ -9,7 +9,8 @@ sudo apt install -y arch-install-scripts archlinux-keyring pacman-package-manage
 #libalpm16
 fi
 # sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
-# sudo cp  -a keyrings /usr/share/pacman
+sudo cp  -a keyrings /usr/share/pacman
+sudo cp  -a keyrings /usr/share/
 # sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
 # sudo cp etc/pacman.conf /etc
 sudo pacman-key --init
