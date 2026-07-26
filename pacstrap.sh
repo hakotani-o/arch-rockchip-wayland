@@ -33,7 +33,7 @@ mkdir -p ./mnt/usr/share/u-boot-menu/conf.d
 EOF
 echo -n "rootwait rw console=ttyS2,1500000 console=tty1" > ./mnt/etc/kernel/cmdline
 sudo ./ai-wayland.sh
-kernel_version=$( ls ./mnt/boot/vmlinuz*| sed 's/vmlinuz/ /'| sed 's/-aarch64-rockchip//' | awk '{ print $2 }' )
+kernel_version=$( ls ./mnt/boot/vmlinuz*| sed 's/vmlinuz-/ /'| sed 's/-aarch64-rockchip//' | awk '{ print $2 }' )
 echo "kernel_version=$kernel_version" > /kernel_version
 # キャッシュクリア
 yes | sudo pacman -Scc --root ./mnt 
