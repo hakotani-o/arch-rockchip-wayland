@@ -15,7 +15,7 @@ sudo cp  -a keyrings /usr/share/
 # sudo cp etc/pacman.conf /etc
 sudo pacman-key --init
 sudo pacman-key --populate archlinuxarm
-sudo pacman -S --noconfirm arch-install-scripts
+# sudo pacman -S --noconfirm arch-install-scripts
 yes|sudo pacman -Syyu
 
 rm -rf linux-aarch64-*
