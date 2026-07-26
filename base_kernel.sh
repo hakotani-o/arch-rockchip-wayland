@@ -12,7 +12,7 @@ sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
 sudo cp  -a keyrings /usr/share/pacman
 sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
 sudo cp etc/pacman.conf /etc
-sudo pacman-key --init
+#sudo pacman-key --init
 sudo sudo pacman-key --populate archlinuxarm
 sudo pacman -S --noconfirm arch-install-scripts
 yes|sudo pacman -Syyu
