@@ -8,16 +8,15 @@ if [ $kernel != "archlinux" ]; then
 sudo apt install -y arch-install-scripts archlinux-keyring pacman-package-manager systemd-container libalpm13t64
 #libalpm16
 fi
-# sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
+sudo mkdir /etc/pacman.d
+sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d/
 sudo cp  -a keyrings /usr/share/pacman
+sudo cp etc/pacman.conf /etc
 sudo cp  -a keyrings /usr/share/
-# sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
-# sudo cp etc/pacman.conf /etc
-# sudo pacman-key --init
-# sudo pacman-key --populate archlinuxarm
-# sudo pacman -Syyu
- sudo pacman -S --noconfirm arch-install-scripts
-# sudo pacman -Syyu
+sudo pacman-key --init
+sudo pacman-key --populate archlinuxarm
+sudo pacman -Syy
+sudo pacman -S --noconfirm arch-install-scripts
 
 rm -rf linux-aarch64-*
 rm -rf base_camp && mkdir base_camp
