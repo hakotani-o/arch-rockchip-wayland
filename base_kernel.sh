@@ -13,10 +13,10 @@ sudo cp  -a keyrings /usr/share/pacman
 sudo cp  -a keyrings /usr/share/
 # sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
 # sudo cp etc/pacman.conf /etc
-sudo pacman-key --init
-sudo pacman-key --populate archlinuxarm
-sudo pacman -Syyu
-# sudo pacman -S --noconfirm arch-install-scripts
+# sudo pacman-key --init
+# sudo pacman-key --populate archlinuxarm
+# sudo pacman -Syyu
+ sudo pacman -S --noconfirm arch-install-scripts
 # sudo pacman -Syyu
 
 rm -rf linux-aarch64-*
