@@ -47,7 +47,7 @@ export  LANG=C
 kernel=$(uname -a|awk '{ print $2 }')
 
 if [ $kernel != "archlinux" ]; then
-sudo apt-get update && sudo apt-get -y install uuid-runtime 
+sudo apt-get update && sudo apt-get -y install uuid-runtime libarchive-tools
 else
 sudo pacman --noconfirm -S --need util-linux
 fi
