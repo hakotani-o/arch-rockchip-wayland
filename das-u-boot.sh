@@ -1,5 +1,8 @@
 #!/bin/bash
 
+kernel=$(uname -a|awk '{ print $2 }')
+
+if [ $kernel != "archlinux" ]; then
 
 # ディスクイメージを作成するために必要なツールをインストール
 sudo apt-get update && sudo apt-get -y install  build-essential gcc-aarch64-linux-gnu bison \
@@ -10,6 +13,9 @@ python-is-python3 fdisk bc debhelper python3-pyelftools python3-setuptools \
 python3-pkg-resources swig libfdt-dev libpython3-dev gawk \
 git fakeroot build-essential ncurses-dev xz-utils libssl-dev bc flex \
 libelf-dev bison libgnutls28-dev libdw-dev
+else
+sudo pacman -S --noconfirm --need base-devel uboot-tools dtc bc gcc flex bison git wget python-setuptools python-pkg_resources python swig python-pyelftools
+fi
 
 	rm -rf arm64
 	mkdir arm64

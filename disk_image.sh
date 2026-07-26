@@ -44,8 +44,13 @@ export  LANG=C
 
 
 # ホスト環境（ビルドを回しているPC）に必要なツール
+kernel=$(uname -a|awk '{ print $2 }')
 
-sudo apt-get update && sudo apt-get -y install uuid-runtime  libarchive-tools
+if [ $kernel != "archlinux" ]; then
+sudo apt-get update && sudo apt-get -y install uuid-runtime 
+else
+sudo pacman --noconfirm -S --need util-linux
+fi
 
 rootfs="./Arch-linux.rootfs.tar.gz"
 rootfs="$(readlink -f "$rootfs")"
@@ -116,9 +121,6 @@ mkdir -p ${mount_point}
 # Copy the rootfs to root partition
 bsdtar -zxpf "${rootfs}" -C ${mount_point}/writable
 
-fdt_name="/boot/dtbs/rockchip/$2.dtb"
-
-
 # Create fstab entries
 echo "# <file system>     <mount point>  <type>  <options>   <dump>  <fsck>" > ${mount_point}/writable/etc/fstab
 echo "UUID=${root_uuid,,} /              ext4    defaults,noatime    0       1" >> ${mount_point}/writable/etc/fstab
@@ -131,37 +133,15 @@ else
 	exit 1
 fi
 
-{
-echo '#!/bin/bash'
-echo ""
-echo '# extlinux.conf の出力先パス'
-echo 'EXTLINUX_DIR="/boot/extlinux"'
-echo 'EXTLINUX_CONF="${EXTLINUX_DIR}/extlinux.conf"'
-echo ""
-echo "# ディレクトリが存在しない場合は作成"
-echo 'mkdir -p "${EXTLINUX_DIR}"'
-echo ""
-echo '# extlinux.conf の生成'
-echo 'cat << EOF1 > "${EXTLINUX_CONF}"'
-echo 'default arch'
-echo 'menu title Arch Linux Boot Menu'
-echo 'prompt 1'
-echo 'timeout 50'
-echo ''
-echo 'label arch'
-echo '    menu label Arch Linux'
-echo '    linux /boot/Image.gz'
-echo '    initrd /boot/initramfs-linux.img'
-echo '    # デバイスツリーのパスは環境に合わせて変更してください'
-echo "    fdt ${fdt_name}"
-echo "    append root=UUID=${root_uuid,,} rw console=ttyS0,115200"
-echo "EOF1"
-echo ''
-} > ${mount_point}/writable/usr/local/bin/generate-extlinux.sh
-echo "Generated extlinux.conf U-Boot configuration."
-sudo chmod +x ${mount_point}/writable/usr/local/bin/generate-extlinux.sh
-
 mountpoint="${mount_point}/writable"
+
+# u-boot para
+fdt_name="rockchip/$2.dtb"
+dtbs_install_path="/boot/dtbs/"
+echo U_BOOT_FDT='"'"$fdt_name"'"' >> ${mount_point}/writable/etc/default/u-boot
+echo U_BOOT_FDT_DIR='"'"$dtbs_install_path"'"' >> ${mount_point}/writable/etc/default/u-boot
+
+kernel_version=$( ls ${mount_point}/writable/boot/vmlinuz* | sed 's/vmlinuz/ /' | awk '{ print $2 }' )
 
 mount dev-live -t devtmpfs "$mountpoint/dev"
 mount devpts-live -t devpts -o nodev,nosuid "$mountpoint/dev/pts"
@@ -195,8 +175,11 @@ sed -i 's/^MODULES=(.*/MODULES=(ahci sd_mod nvme mmc_block ext4)/' ${mount_point
 sed -i 's/^HOOKS=(.*/HOOKS=(base systemd modconf kms keyboard sd-vconsole block filesystems fsck)/' ${mount_point}/writable/etc/mkinitcpio.conf
 
 # その後、前述した通りchroot内で再ビルド
-chroot ${mount_point}/writable/ /bin/bash -c "mkinitcpio -P && /usr/local/bin/generate-extlinux.sh && sync"
+#chroot ${mount_point}/writable/ /bin/bash -c "mkinitcpio -P && /usr/local/bin/generate-extlinux.sh && sync"
+chroot ${mount_point}/writable/ /bin/bash -c "mkinitcpio -P && mv /boot/initramfs-linux.img /boot/initrd.img$kernel_version && sync"
 
+# u-boot-update
+chroot ${mount_point}/writable/ /usr/local/sbin/u-boot-update
 sync --file-system
 sync
 
@@ -215,7 +198,7 @@ losetup -d "${loop}"
 
 # Exit trap is no longer needed
 echo -e "\nCompressing $(basename "${img}.xz")\n"
-xz -v -9 -T0 "${img}"
+#xz -v -9 -T0 "${img}"
 #rm "${img}"
 exit 0
 

@@ -5,21 +5,6 @@ mkdir -p ./mnt/usr/local/bin
 cp ./firstboot-growroot.sh ./mnt/usr/local/bin
 chmod +x ./mnt/usr/local/bin/firstboot-growroot.sh
 
-# 【Arch仕様】Pacmanフックの設定
-# ※もしカスタムカーネルのパッケージ名が「linux」以外なら、Targetを変更してください
-CONF="./mnt/etc/pacman.d/hooks/update-extlinux.hook"
-mkdir -p ./mnt/etc/pacman.d/hooks
-cat << EOF2 > $CONF
-[Trigger]
-Operation = Upgrade
-Type = Package
-Target = linux
-
-[Action]
-When = PostTransaction
-Exec = /usr/local/bin/generate-extlinux.sh
-EOF2
-
 
 # ① 【SDDM対応】setupadmin の自動ログインを設定
 # SDDMは conf.d 形式で設定を流し込むのがArchの標準で、スマートです
@@ -78,6 +63,8 @@ if [ -f "/etc/mkinitcpio.conf.org" ]; then
     (
         echo "# 復元された設定で initramfs を再構築中..."
         sudo mkinitcpio -P 2>&1
+	sudo cp /boot/initramfs-linux.img /boot/initrd.img-$(uname -r)
+	sudo rm /boot/initramfs-linux.img
         echo "# 再構築が完了しました！"
     ) | zenity --text-info --title="システム最適化中" --width=600 --height=400 --auto-scroll
 fi

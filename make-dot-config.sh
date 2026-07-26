@@ -11,6 +11,12 @@ org_sublevel=$( grep -m1 "SUBLEVEL = " Makefile )
 sed -i "s/$org_patchlevel/PATCHLEVEL = $chg_patchlevel/" Makefile
 sed -i "s/$org_sublevel/SUBLEVEL = $chg_sublevel/" Makefile
 
+# TAMESI
+sed -i 's/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs"/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs\/$kernver"/' ../../PKGBUILD
+sed -i '/conflicts=/d' ../../PKGBUILD 
+sed -i 's/echo "Installing modules..."/mv "${pkgdir}\/boot\/Image.gz" "${pkgdir}\/boot\/vmlinuz-${kernver}"\n  rm "${pkgdir}\/boot\/Image" \n\n\n echo "Installing modules..."/' ../../PKGBUILD
+
+
 make defconfig
   ./scripts/kconfig/merge_config.sh -m .config /home/builder/my-add.txt
   ./scripts/config --set-val DEBUG_INFO_NONE y
@@ -30,6 +36,6 @@ make defconfig
 
   sed -i 's/CONFIG_LOCALVERSION="-ARCH"/CONFIG_LOCALVERSION=""/' .config
   cp .config ../../config
-sudo cp .config /config-chg
+sudo cp .config /Config-chg
   make prepare
 

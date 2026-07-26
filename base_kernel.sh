@@ -2,20 +2,20 @@
 set -eE
 set -x
 
+kernel=$(uname -a|awk '{ print $2 }')
 
-sudo apt install -y arch-install-scripts archlinux-keyring pacman-package-manager systemd-container libalpm13t64 
-# libarchive-tools 
-# libalpm16
-sudo mkdir /etc/pacman.d
-sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d/
+if [ $kernel != "archlinux" ]; then
+sudo apt install -y arch-install-scripts archlinux-keyring pacman-package-manager libarchive-tools systemd-container libalpm13t64
+#libalpm16
+fi
+sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
 sudo cp  -a keyrings /usr/share/pacman
+sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
 sudo cp etc/pacman.conf /etc
-sudo cp  -a keyrings /usr/share/
 sudo pacman-key --init
-sudo pacman-key --populate archlinuxarm
-sudo pacman -Syyu
-#sudo pacman -S --noconfirm arch-install-scripts
-
+sudo sudo pacman-key --populate archlinuxarm
+sudo pacman -S --noconfirm arch-install-scripts
+yes|sudo pacman -Syyu
 
 rm -rf linux-aarch64-*
 rm -rf base_camp && mkdir base_camp
@@ -36,8 +36,8 @@ sudo systemd-nspawn -D ./base_camp --resolv-conf=replace-host /rockchip-kernel.s
 rm -f base_camp/linux-aarch64-rockchip-chromebook-*
 cp base_camp/linux-aarch64-rockchip-*.pkg.tar.* .
 cp base_camp/arch-build-log.txt .
-cp base_camp/config-chg .
-echo "kernel_version=$( ls linux-aarch64-rockchip-headers-[0-9]*.pkg.tar.* | awk -F- '{ print $5 }' )" > kernel_version
+cp base_camp/Config-chg .
+
 if [ $mem_size -gt 13 ]; then
         sudo umount base_camp
         sleep 2
