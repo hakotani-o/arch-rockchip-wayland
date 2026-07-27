@@ -36,6 +36,7 @@ make defconfig
 
   sed -i 's/CONFIG_LOCALVERSION="-ARCH"/CONFIG_LOCALVERSION=""/' .config
   cp .config ../../config
+  cp .config ../config
 sudo cp .config /Config-chg
   make prepare
 
