@@ -76,7 +76,7 @@ echo "---------------------------------------------------"
 # =========================================================
 sed -i 's/make prepare/\/home\/builder\/make-dot-config.sh/' PKGBUILD
 sed -i 's/pkgbase=linux-aarch64/pkgbase=linux-aarch64-rockchip/' PKGBUILD
-sed -i 's/git apply --whitespace=nowarn ..\/patch-${pkgver}/# git apply --whitespace=nowarn ..\/patch-${pkgver}\n echo "apply --whitespace=nowarn ..\/patch-${pkgver}"\n/' PKGBUILD
+sed -i 's/git apply --whitespace=nowarn ..\/patch-${pkgver}/# git  apply --whitespace=nowarn ..\/patch-${pkgver}\n echo "apply --whitespace=nowarn ..\/patch-${pkgver}"\n/' PKGBUILD
 sed -i 's/git apply/# git apply/' PKGBUILD
 cp linux-aarch64.install linux-aarch64-rockchip.install
 cp linux-aarch64-chromebook.install linux-aarch64-rockchip-chromebook.install
