@@ -1,15 +1,15 @@
 #!/bin/bash
 
-#chg_version=$( grep -m1 pkgver= ../../PKGBUILD | sed 's/pkgver=//' | awk -F. '{ print $1 }')
-chg_patchlevel=$( grep -m1 pkgver= ../../PKGBUILD | sed 's/pkgver=//' | awk -F. '{ print $2 }')
-chg_sublevel=$( grep -m1 pkgver= ../../PKGBUILD | sed 's/pkgver=//' | awk -F. '{ print $3 }')
-#org_version=$( grep -m1 "VERSION = " Makefile )
-org_patchlevel=$( grep -m1 "PATCHLEVEL = " Makefile )
-org_sublevel=$( grep -m1 "SUBLEVEL = " Makefile )
+grep -m1 pkgver ../../PKGBUILD > prepare
+source ./prepare
+        echo "patch-$pkgver"
+        patch -p1 < ../patch-$pkgver
 
-#sed -i "s/$org_version/VERSION = $chg_version/" Makefile
-sed -i "s/$org_patchlevel/PATCHLEVEL = $chg_patchlevel/" Makefile
-sed -i "s/$org_sublevel/SUBLEVEL = $chg_sublevel/" Makefile
+for i in ../*.patch
+do
+        echo $i
+        patch -p1 < $i
+done
 
 # TAMESI
 sed -i 's/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs"/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs\/$kernver"/' ../../PKGBUILD
