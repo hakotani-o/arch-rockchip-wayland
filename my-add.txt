@@ -143,7 +143,7 @@ CONFIG_VIDEO_ROCKCHIP_VDEC=m
 CONFIG_DVB_NET=n 
 CONFIG_MEDIA_TUNER=n
 
-
+CONFIG_VIDEO_DEV=m
 # -------------------------------------------------------------
 # Chromium ハードウェアデコード向け追加
 # -------------------------------------------------------------
@@ -156,6 +156,41 @@ CONFIG_DMABUF_HEAPS_CMA=y       # 同上
 CONFIG_DMA_SHARED_BUFFER=y      # 同上の基盤
 CONFIG_MEDIA_CONTROLLER=y       # V4L2 メディアコントローラー
 CONFIG_VIDEO_V4L2_SUBDEV_API=y  # V4L2 サブデバイス API
+
+# ====================================================================
+# 🎛️ ZRAM（メモリ圧縮機能）の有効化
+# ====================================================================
+CONFIG_ZSMALLOC=y
+CONFIG_ZRAM=m
+
+
+# ====================================================================
+# 📶 Wi-Fi基本設定 ＆ Realtek RTL8852BE (rtw89) の有効化
+# ====================================================================
+CONFIG_WIRELESS=y
+CONFIG_WLAN=y
+CONFIG_WLAN_VENDOR_REALTEK=y
+CONFIG_CFG80211=m
+CONFIG_MAC80211=m
+
+# Realtek Wi-Fi 6 (rtw89) コアモジュール
+CONFIG_RTW89=m
+CONFIG_RTW89_CORE=m
+
+# PCIe接続のRTL8852BE用（念のため両方有効化します）
+CONFIG_RTW89_8852B=m
+CONFIG_RTW89_8852BE=m
+CONFIG_RTW89_8852AU=m
+CONFIG_RTW89_8852BU=m
+CONFIG_RTW89_8852BTE=m
+
+# 以下は別のチップ
+# CONFIG_RTW89_8852CE is not set
+# CONFIG_RTW89_8852CU is not set
+
+
+# USB接続のRTL8852BE用（メインラインに存在する場合の有効化設定）
+CONFIG_RTW89_8852BU=m
 
 # -------------------------------------------------------------
 # 不足分追加 KOKOKARA
@@ -223,6 +258,13 @@ CONFIG_DRM_NOUVEAU=n
 CONFIG_PINCTRL_RP1=n
 CONFIG_MEDIA_TUNER=n
 CONFIG_CHROME_PLATFORMS=n
-
-
-#### archorg kara kotonaru monowo tuika
+CONFIG_PHY_QCOM_USB_HS=n
+CONFIG_PHY_QCOM_USB_HSIC=n
+CONFIG_SOUNDWIRE_QCOM=n
+CONFIG_RPMSG_QCOM_GLINK=n
+CONFIG_RPMSG_QCOM_GLINK_RPM=n
+CONFIG_LEDS_QCOM_LPG=n
+CONFIG_POWER_SEQUENCING_QCOM_WCN=n
+CONFIG_BATTERY_QCOM_BATTMGR=n
+CONFIG_REGULATOR_QCOM_SPMI=n
+#### 
