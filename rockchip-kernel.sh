@@ -3,8 +3,8 @@ set -eE
 set -x  # 進行状況がわかるようにデバッグ表示を追加
 
 # 引数のチェック（my-add.txt が指定されているか）
-if [ -z "$1" ]; then
-    echo "エラー: 第1引数に my-add.txt のパスを指定してください。"
+if [ -z "$3" ]; then
+    echo "エラー: 第3引数に vp9-profile2-kernel-rkvdec.patch のパスを指定してください。"
     exit 1
 fi
 
@@ -43,6 +43,9 @@ chown builder:builder /home/builder/my-add.txt
 mv "$2" /home/builder/make-dot-config.sh
 chown builder:builder /home/builder/make-dot-config.sh
 chmod +x /home/builder/make-dot-config.sh
+mv "$3" /home/builder/
+mv rkvdec-vdpu381-vp9.[ch] /home/builder/
+chown builder:builder /home/builder/rkvdec-vdpu381-vp9.[ch]
 
 # === ここから一般ユーザー「builder」として実行 ===
 sudo -u builder bash  << 'EOF'
