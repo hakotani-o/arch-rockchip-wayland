@@ -31,9 +31,9 @@ sudo pacstrap ./base_camp base sudo arch-install-scripts archlinux-keyring base-
 
 # ARCH-ORG
 # 設定ファイルとスクリプトをコンテナへコピー
-sudo cp rockchip-kernel.sh my-add.txt make-dot-config.sh ./base_camp
+sudo cp rockchip-kernel.sh my-add.txt make-dot-config.sh vp9-profile2-kernel-rkvdec.patch rkvdec-vdpu381-vp9.[ch] ./base_camp
 # --as-pid2 を削除し、コンテナを起動
-sudo systemd-nspawn -D ./base_camp --resolv-conf=replace-host /rockchip-kernel.sh /my-add.txt /make-dot-config.sh
+sudo systemd-nspawn -D ./base_camp --resolv-conf=replace-host /rockchip-kernel.sh /my-add.txt /make-dot-config.sh /vp9-profile2-kernel-rkvdec.patch
 
 # 成果物の名前が .pkg.tar.zst になっている可能性を考慮して修正
 rm -f base_camp/linux-aarch64-rockchip-chromebook-*
