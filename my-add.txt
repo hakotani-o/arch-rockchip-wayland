@@ -141,6 +141,9 @@ CONFIG_VIDEOBUF2_DMA_SG=m
 CONFIG_VIDEO_ROCKCHIP_RGA=m
 CONFIG_VIDEO_ROCKCHIP_VDEC=m
 
+CONFIG_DRM_ACCEL=y
+CONFIG_DRM_ACCEL_ROCKET=m
+
 # -------------------------------------------------------------
 # Chromium ハードウェアデコード向け追加
 # -------------------------------------------------------------
