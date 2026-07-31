@@ -83,12 +83,12 @@ index 4b593befd7c8..27f7dbb9f33c 100644
 +	.get_image_fmt = rkvdec_vp9_get_image_fmt,
 +};
 --- a/drivers/media/platform/rockchip/rkvdec/rkvdec.c	2026-07-31 07:10:06.111199105 +0900
-+++ b/drivers/media/platform/rockchip/rkvdec/rkvdec.c	2026-07-31 07:54:18.671259346 +0900
++++ b/drivers/media/platform/rockchip/rkvdec/rkvdec.c	2026-07-31 12:35:53.079636196 +0900
 @@ -419,6 +419,7 @@
  static const struct rkvdec_ctrl_desc rkvdec_vp9_ctrl_descs[] = {
  	{
  		.cfg.id = V4L2_CID_STATELESS_VP9_FRAME,
-+	\t.cfg.ops = &rkvdec_ctrl_ops,
++		.cfg.ops = &rkvdec_ctrl_ops,
  	},
  	{
  		.cfg.id = V4L2_CID_STATELESS_VP9_COMPRESSED_HDR,
@@ -115,7 +115,8 @@ index 4b593befd7c8..27f7dbb9f33c 100644
  		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_decoded_fmts),
  		.decoded_fmts = rkvdec_h264_decoded_fmts,
  		.subsystem_flags = VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF,
-+t{
++	},
++	{
 +		.fourcc = V4L2_PIX_FMT_VP9_FRAME,
 +		.frmsize = {
 +			.min_width = 64,
@@ -129,15 +130,14 @@ index 4b593befd7c8..27f7dbb9f33c 100644
 +		.ops = &rkvdec_vdpu381_vp9_fmt_ops,
 +		.num_decoded_fmts = ARRAY_SIZE(vdpu38x_vp9_decoded_fmts),
 +		.decoded_fmts = vdpu38x_vp9_decoded_fmts,
-+	},
  	},
  };
  
-@@ -577,6 +605,21 @@
- 		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_decoded_fmts),
+@@ -578,6 +606,21 @@
  		.decoded_fmts = rkvdec_h264_decoded_fmts,
  		.subsystem_flags = VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF,
-+t{
+ 	},
++	{
 +		.fourcc = V4L2_PIX_FMT_VP9_FRAME,
 +		.frmsize = {
 +			.min_width = 64,
@@ -152,14 +152,15 @@ index 4b593befd7c8..27f7dbb9f33c 100644
 +		.num_decoded_fmts = ARRAY_SIZE(vdpu38x_vp9_decoded_fmts),
 +		.decoded_fmts = vdpu38x_vp9_decoded_fmts,
 +	},
- 	},
  };
  
-@@ -799,6 +842,7 @@
+ static const struct rkvdec_coded_fmt_desc *
+@@ -799,6 +842,8 @@
  	 * Note that this will propagates any size changes to the decoded format.
  	 */
  	ctx->image_fmt = RKVDEC_IMG_FMT_ANY;
-+	if (desc->fourcc == V4L2_PIX_FMT_VP9_FRAME)\n\t\tctx->image_fmt = RKVDEC_IMG_FMT_420_8BIT;\n
++	if (desc->fourcc == V4L2_PIX_FMT_VP9_FRAME)
++		ctx->image_fmt = RKVDEC_IMG_FMT_420_8BIT;
  	rkvdec_reset_decoded_fmt(ctx);
  
  	/* Propagate colorspace information to capture. */
