@@ -1,4 +1,15 @@
 #!/bin/bash
+set -eE
+
+# ====================================================================
+# 📺 [対策会議] VP9ハードウェアデコード復活 ＆ 縦動画（Shorts）バグ修正パッ
+チ
+# ====================================================================
+#echo "Downloading VP9 hardware decode patch for rkvdec2..."
+#wget -O ../999-v4l2-rockchip-vdec-vp9-profile2-stride-fix.patch \
+#https://github.com/dongioia/rock5bplus-rkvdec2/releases/download/chromium-150.0.7871.114-nv15-10bit/vp9-profile2-kernel-rkvdec.patch
+mv ~/vp9-profile2-kernel-rkvdec.patch ..
+mv ~/rkvdec-vdpu381-vp9.[ch] drivers/media/platform/rockchip/rkvdec/
 
 grep -m1 pkgver ../../PKGBUILD > prepare
 source ./prepare
