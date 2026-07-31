@@ -1,0 +1,165 @@
+From 1a7934ffbb111649dab68812dfaf0f5006b54429 Sun Jul 12 20:34:26 2026 +0000
+From: sky-rk3588 <297247175+sky-rk3588@users.noreply.github.com>
+Subject: media: rkvdec: vdpu381: add VP9 profile 2 (10-bit) support
+
+diff --git a/drivers/media/platform/rockchip/rkvdec/rkvdec-vdpu381-vp9.c b/drivers/media/platform/rockchip/rkvdec/rkvdec-vdpu381-vp9.c
+index 4b593befd7c8..27f7dbb9f33c 100644
+--- a/drivers/media/platform/rockchip/rkvdec/rkvdec-vdpu381-vp9.c
++++ b/drivers/media/platform/rockchip/rkvdec/rkvdec-vdpu381-vp9.c
+@@ -383,7 +383,7 @@ static dma_addr_t get_mv_base_addr(struct rkvdec_decoded_buffer *buf)
+ 	unsigned int aligned_pitch, aligned_height, yuv_len;
+ 
+ 	aligned_height = round_up(buf->vp9.height, 64);
+-	aligned_pitch = round_up(buf->vp9.width * buf->vp9.bit_depth, 512) / 8;
++	aligned_pitch = DIV_ROUND_UP(buf->vp9.width * buf->vp9.bit_depth, 8);
+ 	yuv_len = (aligned_height * aligned_pitch * 3) / 2;
+ 
+ 	return vb2_dma_contig_plane_dma_addr(&buf->base.vb.vb2_buf, 0) +
+@@ -432,7 +432,7 @@ static void config_ref_registers(struct rkvdec_ctx *ctx,
+ 	if (&ref_buf->base.vb == run->base.bufs.dst)
+ 		return;
+ 
+-	aligned_pitch = round_up(ref_buf->vp9.width * ref_buf->vp9.bit_depth, 512) / 8;
++	aligned_pitch = DIV_ROUND_UP(ref_buf->vp9.width * ref_buf->vp9.bit_depth, 8);
+ 	y_len = aligned_height * aligned_pitch;
+ 	yuv_len = (y_len * 3) / 2;
+ 
+@@ -584,9 +584,13 @@ static void config_registers(struct rkvdec_ctx *ctx,
+ 	bit_depth = dec_params->bit_depth;
+     aligned_height = round_up(ctx->decoded_fmt.fmt.pix_mp.height, 64);
+ 
+-	aligned_pitch = round_up(ctx->decoded_fmt.fmt.pix_mp.width *
+-				 bit_depth,
+-				 512) / 8;
++	/*
++	 * Use the capture buffer's bytesperline as the hardware stride, same
++	 * as the HEVC backend. v4l2_fill_pixfmt_mp() already sizes NV12/NV15
++	 * correctly (10-bit NV15 packs as width*10/8); the old round_up(...,512)
++	 * over-aligned 10-bit strides and corrupted the output.
++	 */
++	aligned_pitch = ctx->decoded_fmt.fmt.pix_mp.plane_fmt[0].bytesperline;
+ 	y_len = aligned_height * aligned_pitch;
+ 	uv_len = y_len / 2;
+ 	yuv_len = y_len + uv_len;
+@@ -654,7 +658,6 @@ static void config_registers(struct rkvdec_ctx *ctx,
+ 
+ 	if (!intra_only) {
+ 		const struct v4l2_vp9_loop_filter *lf;
+-		s8 delta;
+ 
+ 		if (vp9_ctx->last.valid)
+ 			lf = &vp9_ctx->last.lf;
+@@ -1129,7 +1132,23 @@ static int rkvdec_vp9_adjust_fmt(struct rkvdec_ctx *ctx,
+ 	return 0;
+ }
+ 
+-
++static enum rkvdec_image_fmt
++rkvdec_vp9_get_image_fmt(struct rkvdec_ctx *ctx, struct v4l2_ctrl *ctrl)
++{
++	const struct v4l2_ctrl_vp9_frame *frame = ctrl->p_new.p_vp9_frame;
++
++	if (ctrl->id != V4L2_CID_STATELESS_VP9_FRAME)
++		return RKVDEC_IMG_FMT_ANY;
++
++	switch (frame->bit_depth) {
++	case 8:
++		return RKVDEC_IMG_FMT_420_8BIT;
++	case 10:
++		return RKVDEC_IMG_FMT_420_10BIT;
++	default:
++		return RKVDEC_IMG_FMT_ANY;
++	}
++}
+ 
+ const struct rkvdec_coded_fmt_ops rkvdec_vdpu381_vp9_fmt_ops = {
+ 	.adjust_fmt = rkvdec_vp9_adjust_fmt,
+@@ -1137,4 +1156,5 @@ const struct rkvdec_coded_fmt_ops rkvdec_vdpu381_vp9_fmt_ops = {
+ 	.stop = rkvdec_vp9_stop,
+ 	.run = rkvdec_vp9_run,
+ 	.done = rkvdec_vp9_done,
+-};
+\ No newline at end of file
++	.get_image_fmt = rkvdec_vp9_get_image_fmt,
++};
+--- a/drivers/media/platform/rockchip/rkvdec/rkvdec.c	2026-07-31 07:10:06.111199105 +0900
++++ b/drivers/media/platform/rockchip/rkvdec/rkvdec.c	2026-07-31 07:54:18.671259346 +0900
+@@ -419,6 +419,7 @@
+ static const struct rkvdec_ctrl_desc rkvdec_vp9_ctrl_descs[] = {
+ 	{
+ 		.cfg.id = V4L2_CID_STATELESS_VP9_FRAME,
++	\t.cfg.ops = &rkvdec_ctrl_ops,
+ 	},
+ 	{
+ 		.cfg.id = V4L2_CID_STATELESS_VP9_COMPRESSED_HDR,
+@@ -431,6 +432,18 @@
+ 	},
+ };
+ 
++
++static const struct rkvdec_decoded_fmt_desc vdpu38x_vp9_decoded_fmts[] = {
++	{
++		.fourcc = V4L2_PIX_FMT_NV12,
++		.image_fmt = RKVDEC_IMG_FMT_420_8BIT,
++	},
++	{
++		.fourcc = V4L2_PIX_FMT_NV15,
++		.image_fmt = RKVDEC_IMG_FMT_420_10BIT,
++	},
++};
++
+ static const struct rkvdec_ctrls rkvdec_vp9_ctrls = {
+ 	.ctrls = rkvdec_vp9_ctrl_descs,
+ 	.num_ctrls = ARRAY_SIZE(rkvdec_vp9_ctrl_descs),
+@@ -542,6 +555,21 @@
+ 		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_decoded_fmts),
+ 		.decoded_fmts = rkvdec_h264_decoded_fmts,
+ 		.subsystem_flags = VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF,
++t{
++		.fourcc = V4L2_PIX_FMT_VP9_FRAME,
++		.frmsize = {
++			.min_width = 64,
++			.max_width = 65520,
++			.step_width = 64,
++			.min_height = 64,
++			.max_height = 65520,
++			.step_height = 64,
++		},
++		.ctrls = &rkvdec_vp9_ctrls,
++		.ops = &rkvdec_vdpu381_vp9_fmt_ops,
++		.num_decoded_fmts = ARRAY_SIZE(vdpu38x_vp9_decoded_fmts),
++		.decoded_fmts = vdpu38x_vp9_decoded_fmts,
++	},
+ 	},
+ };
+ 
+@@ -577,6 +605,21 @@
+ 		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_decoded_fmts),
+ 		.decoded_fmts = rkvdec_h264_decoded_fmts,
+ 		.subsystem_flags = VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF,
++t{
++		.fourcc = V4L2_PIX_FMT_VP9_FRAME,
++		.frmsize = {
++			.min_width = 64,
++			.max_width = 65520,
++			.step_width = 64,
++			.min_height = 64,
++			.max_height = 65520,
++			.step_height = 64,
++		},
++		.ctrls = &rkvdec_vp9_ctrls,
++		.ops = &rkvdec_vdpu383_vp9_fmt_ops,
++		.num_decoded_fmts = ARRAY_SIZE(vdpu38x_vp9_decoded_fmts),
++		.decoded_fmts = vdpu38x_vp9_decoded_fmts,
++	},
+ 	},
+ };
+ 
+@@ -799,6 +842,7 @@
+ 	 * Note that this will propagates any size changes to the decoded format.
+ 	 */
+ 	ctx->image_fmt = RKVDEC_IMG_FMT_ANY;
++	if (desc->fourcc == V4L2_PIX_FMT_VP9_FRAME)\n\t\tctx->image_fmt = RKVDEC_IMG_FMT_420_8BIT;\n
+ 	rkvdec_reset_decoded_fmt(ctx);
+ 
+ 	/* Propagate colorspace information to capture. */
