@@ -31,7 +31,7 @@ sudo pacstrap ./base_camp base sudo arch-install-scripts archlinux-keyring base-
 
 # ARCH-ORG
 # 設定ファイルとスクリプトをコンテナへコピー
-sudo cp rockchip-kernel.sh my-add.txt make-dot-config.sh vp9-profile2-kernel-rkvdec.patch rkvdec-vdpu381-vp9.[ch] ./base_camp
+sudo cp rockchip-kernel.sh my-add.txt make-dot-config.sh vp9-profile2-kernel-rkvdec.patch rkvdec-vdpu381-vp9.[ch] vp9-vdpu381-adapted.patch dvab-sarma-vp9-vdpu381.patch ./base_camp
 # --as-pid2 を削除し、コンテナを起動
 sudo systemd-nspawn -D ./base_camp --resolv-conf=replace-host /rockchip-kernel.sh /my-add.txt /make-dot-config.sh /vp9-profile2-kernel-rkvdec.patch
 
