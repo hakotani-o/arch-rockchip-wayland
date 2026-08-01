@@ -137,7 +137,7 @@ index 4b593befd7c8..27f7dbb9f33c 100644
  		.decoded_fmts = rkvdec_h264_decoded_fmts,
  		.subsystem_flags = VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF,
  	},
-+	{
++/*	{
 +		.fourcc = V4L2_PIX_FMT_VP9_FRAME,
 +		.frmsize = {
 +			.min_width = 64,
@@ -151,7 +151,7 @@ index 4b593befd7c8..27f7dbb9f33c 100644
 +		.ops = &rkvdec_vdpu383_vp9_fmt_ops,
 +		.num_decoded_fmts = ARRAY_SIZE(vdpu38x_vp9_decoded_fmts),
 +		.decoded_fmts = vdpu38x_vp9_decoded_fmts,
-+	},
++	},*/
  };
  
  static const struct rkvdec_coded_fmt_desc *

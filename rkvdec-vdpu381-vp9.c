@@ -31,7 +31,13 @@
 
 #define RKVDEC_VP9_PROBE_SIZE		4864
 #define RKVDEC_VP9_COUNT_SIZE		13208
-#define RKVDEC_VP9_MAX_SEGMAP_SIZE	73728
+/*
+ * VP9 segmap size: ceil(width/64) * ceil(height/64) * 256 / 4
+ * For 4K (3840x2160): 60 * 34 * 64 = 130,560 bytes
+ * For 8K (7680x4320): 120 * 68 * 64 = 522,240 bytes
+ * Use 8K-safe value to cover all supported resolutions.
+ */
+#define RKVDEC_VP9_MAX_SEGMAP_SIZE	524288
 
 struct rkvdec_vp9_intra_mode_probs {
     u8 y_mode[105];
@@ -372,12 +378,21 @@ get_ref_buf(struct rkvdec_ctx *ctx, struct vb2_v4l2_buffer *dst, u64 timestamp)
 	return vb2_to_rkvdec_decoded_buf(buf);
 }
 
-static dma_addr_t get_mv_base_addr(struct rkvdec_decoded_buffer *buf)
+static dma_addr_t get_mv_base_addr(struct rkvdec_ctx *ctx,
+				   struct rkvdec_decoded_buffer *buf)
 {
 	unsigned int aligned_pitch, aligned_height, yuv_len;
 
 	aligned_height = round_up(buf->vp9.height, 64);
-	aligned_pitch = round_up(buf->vp9.width * buf->vp9.bit_depth, 512) / 8;
+	/*
+	 * Use the real buffer stride, not one derived from the bitstream
+	 * display width: vp9.width holds frame_width_minus_1 + 1 (e.g. 1080),
+	 * while the buffers are allocated with the coded/aligned stride from
+	 * the CAPTURE format (e.g. 1088). For widths that are not a multiple
+	 * of 16 the two differ and every MV/ref access ends up skewed
+	 * (portrait videos: clean keyframe, corrupted inter frames).
+	 */
+	aligned_pitch = ctx->decoded_fmt.fmt.pix_mp.plane_fmt[0].bytesperline;
 	yuv_len = (aligned_height * aligned_pitch * 3) / 2;
 
 	return vb2_dma_contig_plane_dma_addr(&buf->base.vb.vb2_buf, 0) +
@@ -426,7 +441,8 @@ static void config_ref_registers(struct rkvdec_ctx *ctx,
 	if (&ref_buf->base.vb == run->base.bufs.dst)
 		return;
 
-	aligned_pitch = round_up(ref_buf->vp9.width * ref_buf->vp9.bit_depth, 512) / 8;
+	/* Real buffer stride, not display-width-derived (see get_mv_base_addr). */
+	aligned_pitch = ctx->decoded_fmt.fmt.pix_mp.plane_fmt[0].bytesperline;
 	y_len = aligned_height * aligned_pitch;
 	yuv_len = (y_len * 3) / 2;
 
@@ -578,9 +594,13 @@ static void config_registers(struct rkvdec_ctx *ctx,
 	bit_depth = dec_params->bit_depth;
     aligned_height = round_up(ctx->decoded_fmt.fmt.pix_mp.height, 64);
 
-	aligned_pitch = round_up(ctx->decoded_fmt.fmt.pix_mp.width *
-				 bit_depth,
-				 512) / 8;
+	/*
+	 * Use the capture buffer's bytesperline as the hardware stride, same
+	 * as the HEVC backend. v4l2_fill_pixfmt_mp() already sizes NV12/NV15
+	 * correctly (10-bit NV15 packs as width*10/8); the old round_up(...,512)
+	 * over-aligned 10-bit strides and corrupted the output.
+	 */
+	aligned_pitch = ctx->decoded_fmt.fmt.pix_mp.plane_fmt[0].bytesperline;
 	y_len = aligned_height * aligned_pitch;
 	uv_len = y_len / 2;
 	yuv_len = y_len + uv_len;
@@ -648,7 +668,6 @@ static void config_registers(struct rkvdec_ctx *ctx,
 
 	if (!intra_only) {
 		const struct v4l2_vp9_loop_filter *lf;
-		s8 delta;
 
 		if (vp9_ctx->last.valid)
 			lf = &vp9_ctx->last.lf;
@@ -706,7 +725,7 @@ static void config_registers(struct rkvdec_ctx *ctx,
                 break;
             case 2:
                 regs->vp9_param.reg92.vp9_aref_hor_scale = hscale;
-                regs->vp9_param.reg93.vp9_aref_ver_scale = hscale;
+                regs->vp9_param.reg93.vp9_aref_ver_scale = vscale;
                 break;
         }
 
@@ -752,15 +771,46 @@ static void config_registers(struct rkvdec_ctx *ctx,
 	else
 		mv_ref = dst;
 
-	regs->vp9_addr.vp9_refcolmv_base = get_mv_base_addr(mv_ref);
+	regs->vp9_addr.vp9_refcolmv_base = get_mv_base_addr(ctx, mv_ref);
 
 	rkvdec_write_regs(ctx);
+}
+
+static int rkvdec_vp9_check_caps(struct rkvdec_ctx *ctx, u8 profile, u8 bit_depth)
+{
+	/*
+	 * The decoder only outputs 4:2:0 8-bit (NV12) or 4:2:0 10-bit (NV15).
+	 * Profiles 1 and 3 carry 4:2:2, 4:4:0 or 4:4:4 content, and profile 2
+	 * also allows 12-bit. Neither is representable in a capture buffer
+	 * this driver can allocate, and neither is rejected anywhere else:
+	 * the VP9_PROFILE menu control is independent of the stateless frame
+	 * control read here, and rkvdec_vp9_get_image_fmt() returns
+	 * RKVDEC_IMG_FMT_ANY for a bit depth it does not know, which imposes
+	 * no constraint at all. A 12-bit stream then programs the register
+	 * strides from the bitstream bit depth and walks the hardware past
+	 * the end of the plane.
+	 */
+	if ((profile != 0 && profile != 2) ||
+	    (bit_depth != 8 && bit_depth != 10)) {
+		dev_err_ratelimited(ctx->dev->dev,
+				    "unsupported profile %u bit depth %u\n",
+				    profile, bit_depth);
+		return -EINVAL;
+	}
+
+	return 0;
 }
 
 static int validate_dec_params(struct rkvdec_ctx *ctx,
 			       const struct v4l2_ctrl_vp9_frame *dec_params)
 {
 	unsigned int aligned_width, aligned_height;
+	int ret;
+
+	ret = rkvdec_vp9_check_caps(ctx, dec_params->profile,
+				    dec_params->bit_depth);
+	if (ret)
+		return ret;
 
 	aligned_width = round_up(dec_params->frame_width_minus_1 + 1, 64);
 	aligned_height = round_up(dec_params->frame_height_minus_1 + 1, 64);
@@ -1123,12 +1173,42 @@ static int rkvdec_vp9_adjust_fmt(struct rkvdec_ctx *ctx,
 	return 0;
 }
 
+static enum rkvdec_image_fmt
+rkvdec_vp9_get_image_fmt(struct rkvdec_ctx *ctx, struct v4l2_ctrl *ctrl)
+{
+	const struct v4l2_ctrl_vp9_frame *frame = ctrl->p_new.p_vp9_frame;
 
+	if (ctrl->id != V4L2_CID_STATELESS_VP9_FRAME)
+		return RKVDEC_IMG_FMT_ANY;
+
+	switch (frame->bit_depth) {
+	case 8:
+		return RKVDEC_IMG_FMT_420_8BIT;
+	case 10:
+		return RKVDEC_IMG_FMT_420_10BIT;
+	default:
+		return RKVDEC_IMG_FMT_ANY;
+	}
+}
+
+static int rkvdec_vp9_try_ctrl(struct rkvdec_ctx *ctx, struct v4l2_ctrl *ctrl)
+{
+	if (ctrl->id == V4L2_CID_STATELESS_VP9_FRAME) {
+		const struct v4l2_ctrl_vp9_frame *frame = ctrl->p_new.p_vp9_frame;
+
+		return rkvdec_vp9_check_caps(ctx, frame->profile,
+					     frame->bit_depth);
+	}
+
+	return 0;
+}
 
 const struct rkvdec_coded_fmt_ops rkvdec_vdpu381_vp9_fmt_ops = {
+	.try_ctrl = rkvdec_vp9_try_ctrl,
 	.adjust_fmt = rkvdec_vp9_adjust_fmt,
 	.start = rkvdec_vp9_start,
 	.stop = rkvdec_vp9_stop,
 	.run = rkvdec_vp9_run,
 	.done = rkvdec_vp9_done,
+	.get_image_fmt = rkvdec_vp9_get_image_fmt,
 };
