@@ -21,7 +21,7 @@ do
         echo $i
         patch -p1 < $i
 done
-mv ~/rkvdec-vdpu381-vp9.[ch] drivers/media/platform/rockchip/rkvdec/
+cp ~/rkvdec-vdpu381-vp9.[ch] drivers/media/platform/rockchip/rkvdec/
 
 # TAMESI
 sed -i 's/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs"/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs\/$kernver"/' ../../PKGBUILD
