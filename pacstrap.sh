@@ -32,6 +32,7 @@ mkdir -p ./mnt/usr/share/u-boot-menu/conf.d
 	U_BOOT_TIMEOUT="20" 
 EOF
 echo -n "rootwait rw console=ttyS2,1500000 console=tty1" > ./mnt/etc/kernel/cmdline
+echo "ELECTRON_OZONE_PLATFORM_HINT=wayland" >> ./mnt/etc/environment
 sudo ./ai-wayland.sh
 kernel_version=$( ls ./mnt/boot/vmlinuz*| sed 's/vmlinuz-/ /'| sed 's/-aarch64-rockchip//' | awk '{ print $2 }' )
 echo "kernel_version=$kernel_version" > /kernel_version
