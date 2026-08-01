@@ -9,7 +9,8 @@ set -eE
 #wget -O ../999-v4l2-rockchip-vdec-vp9-profile2-stride-fix.patch \
 #https://github.com/dongioia/rock5bplus-rkvdec2/releases/download/chromium-150.0.7871.114-nv15-10bit/vp9-profile2-kernel-rkvdec.patch
 mv ~/vp9-profile2-kernel-rkvdec.patch ..
-mv ~/rkvdec-vdpu381-vp9.[ch] drivers/media/platform/rockchip/rkvdec/
+mv ~/vp9-vdpu381-adapted.patch ..
+mv ~/dvab-sarma-vp9-vdpu381.patch ..
 
 grep -m1 pkgver ../../PKGBUILD > prepare
 source ./prepare
@@ -21,6 +22,7 @@ do
         echo $i
         patch -p1 < $i
 done
+mv ~/rkvdec-vdpu381-vp9.[ch] drivers/media/platform/rockchip/rkvdec/
 
 # TAMESI
 sed -i 's/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs"/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs\/$kernver"/' ../../PKGBUILD
