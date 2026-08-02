@@ -22,6 +22,7 @@ do
         patch -p1 < $i
 done
 cp ~/rkvdec-vdpu381-vp9.[ch] drivers/media/platform/rockchip/rkvdec/
+cp ~/linux-beryllium-rkvdec.c drivers/media/platform/rockchip/rkvdec/rkvdec.c
 
 # TAMESI
 sed -i 's/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs"/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs\/$kernver"/' ../../PKGBUILD
