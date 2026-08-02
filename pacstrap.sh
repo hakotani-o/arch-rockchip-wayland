@@ -12,11 +12,12 @@ sudo pacstrap ./mnt base vim sudo
 # 【LXQt + Labwc (Wayland) 仕様へ最適化】
 # 不要な xorg / lxde を削り、sddm / labwc / lxqt / pcmanfm-qt を投入
 sudo pacman -S --noconfirm --root ./mnt \
-    sddm labwc lxqt pcmanfm-qt qt6-wayland \
+    sddm labwc lxqt pcmanfm-qt qt6-wayland lxqt-wayland-session \
+    kwin plasma-wayland-protocols kwayland swaylock swayidle \
     networkmanager network-manager-applet ttf-dejavu noto-fonts-cjk \
     pipewire-pulse alsa-utils pavucontrol zenity cloud-guest-utils \
     e2fsprogs gvfs udisks2 clapper mpv vulkan-tools mesa-utils \
-    mkinitcpio linux-firmware util-linux 
+    mkinitcpio linux-firmware util-linux
 
 # kernel (カスタムカーネルパッケージの流し込み)
 yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.1.5-2-aarch64.pkg.tar.*
