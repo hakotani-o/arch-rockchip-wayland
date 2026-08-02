@@ -48,6 +48,8 @@ mv rkvdec-vdpu381-vp9.[ch] /home/builder/
 chown builder:builder /home/builder/rkvdec-vdpu381-vp9.[ch]
 mv dvab-sarma-vp9-vdpu381.patch /home/builder/
 mv vp9-vdpu381-adapted.patch /home/builder/
+mv linux-beryllium-rkvdec.c /home/builder/
+chown builder:builder /home/builder/linux-beryllium-rkvdec.c
 
 # === ここから一般ユーザー「builder」として実行 ===
 sudo -u builder bash  << 'EOF'
