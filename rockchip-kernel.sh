@@ -15,7 +15,7 @@ pacman-key --populate archlinuxarm
 pacman -Syyu --noconfirm
 
 # 必要なパッケージのインストール
-pacman -S --noconfirm --need sudo pacman-contrib
+pacman -S --noconfirm --need sudo pacman-contrib wget
 
 # ビルド用一般ユーザー「builder」の作成とsudo権限付与
 useradd -m -G wheel builder
