@@ -4,12 +4,24 @@ set -eE
 # ====================================================================
 # 📺 [対策会議] VP9ハードウェアデコード復活 ＆ 縦動画（Shorts）バグ修正パッチ
 # ====================================================================
-#echo "Downloading VP9 hardware decode patch for rkvdec2..."
-#wget -O ../999-v4l2-rockchip-vdec-vp9-profile2-stride-fix.patch \
-#https://github.com/dongioia/rock5bplus-rkvdec2/releases/download/chromium-150.0.7871.114-nv15-10bit/vp9-profile2-kernel-rkvdec.patch
-mv ~/vp9-profile2-kernel-rkvdec.patch ..
-mv ~/vp9-vdpu381-adapted.patch ..
-mv ~/dvab-sarma-vp9-vdpu381.patch ..
+echo "Downloading VP9 hardware decode patch for rkvdec2..."
+mkdir minimyth2 && cd minimyth2
+# 3559-media-rkvdec-fix-PM-runtime-teardown-ordering-in-remove.patch
+wget https://raw.githubusercontent.com/warpme/minimyth2/refs/heads/master/script/kernel/linux-7.1/files/3559-media-rkvdec-fix-PM-runtime-teardown-ordering-in-remove.patch
+# 3569-media-rkvdec-prime-VDPU383-deblock-warmup-rk3576.patch
+wget https://raw.githubusercontent.com/warpme/minimyth2/refs/heads/master/script/kernel/linux-7.1/files/3569-media-rkvdec-prime-VDPU383-deblock-warmup-rk3576.patch
+# 3570-media-rkvdec-add-VP9-VDPU381-decoder-support.patch
+wget https://raw.githubusercontent.com/warpme/minimyth2/refs/heads/master/script/kernel/linux-7.1/files/3570-media-rkvdec-add-VP9-VDPU381-decoder-support.patch
+# 3571-media-rkvdec-vp9-fix-altref-vscale-and-segmap-size-for-2K-decode.patch
+wget https://raw.githubusercontent.com/warpme/minimyth2/refs/heads/master/script/kernel/linux-7.1/files/3571-media-rkvdec-vp9-fix-altref-vscale-and-segmap-size-for-2K-decode.patch
+# 3572-media-rkvdec-vdpu381-add-VP9-profile-2-10bit-support.patch
+wget https://raw.githubusercontent.com/warpme/minimyth2/refs/heads/master/script/kernel/linux-7.1/files/3572-media-rkvdec-vdpu381-add-VP9-profile-2-10bit-support.patch
+# 3573-media-rkvdec-vdpu381-vp9-use-the-real-buffer-stride.patch
+wget https://raw.githubusercontent.com/warpme/minimyth2/refs/heads/master/script/kernel/linux-7.1/files/3573-media-rkvdec-vdpu381-vp9-use-the-real-buffer-stride.patch
+# 3574-media-rkvdec-Add-support-for-the-VDPU346-variant.patch
+wget https://raw.githubusercontent.com/warpme/minimyth2/refs/heads/master/script/kernel/linux-7.1/files/3574-media-rkvdec-Add-support-for-the-VDPU346-variant.patch
+cd ..
+
 
 grep -m1 pkgver ../../PKGBUILD > prepare
 source ./prepare
@@ -21,8 +33,13 @@ do
         echo $i
         patch -p1 < $i
 done
-cp ~/rkvdec-vdpu381-vp9.[ch] drivers/media/platform/rockchip/rkvdec/
-cp ~/linux-beryllium-rkvdec.c drivers/media/platform/rockchip/rkvdec/rkvdec.c
+
+# minimyth2 patch
+for i in minimyth2/*.patch
+do
+        echo $i
+        patch -p1 < $i
+done
 
 # TAMESI
 sed -i 's/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs"/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs\/$kernver"/' ../../PKGBUILD
