@@ -67,7 +67,7 @@ jobs:
             - `3573-media-rkvdec-vdpu381-vp9-use-the-real-buffer-stride.patch`
             - `3574-media-rkvdec-Add-support-for-the-VDPU346-variant.patch`
 
-           **Special thanks to the original authors and the minimyth2 project for creating and publishing these essential patches!**
+           Special thanks to the original authors and the minimyth2 project for creating and publishing these essential patches!
 
           draft: false
           prerelease: false
