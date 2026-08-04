@@ -63,6 +63,21 @@ Rockchipのハードウェア特性を最大限に活かすカスタムカーネ
 3. **本家プロジェクトとの関係:** 本プロジェクトは個人によるカスタムビルドであり、Arch Linux、Arch Linux ARM、および Xunlong (Orange Pi) 公式プロジェクトとは一切関係がありません。公式コミュニティへの問い合わせはお控えください。
 
 ---
+### VP9 Hardware Decoding Support
+We have successfully enabled VP9 hardware decoding by applying the following rkvdec kernel patches from the [warpme/minimyth2](https://github.com/warpme/minimyth2) project:
+
+- `3559-media-rkvdec-fix-PM-runtime-teardown-ordering-in-remove.patch`
+- `3569-media-rkvdec-prime-VDPU383-deblock-warmup-rk3576.patch`
+- `3570-media-rkvdec-add-VP9-VDPU381-decoder-support.patch`
+- `3571-media-rkvdec-vp9-fix-altref-vscale-and-segmap-size-for-2K-decode.patch`
+- `3572-media-rkvdec-vdpu381-add-VP9-profile-2-10bit-support.patch`
+- `3573-media-rkvdec-vdpu381-vp9-use-the-real-buffer-stride.patch`
+- `3574-media-rkvdec-Add-support-for-the-VDPU346-variant.patch`
+
+**Special thanks to the original authors and the minimyth2 project for creating and publishing these essential patches!**
+
+---
+
 
 ## 🚀 導入・初期設定ガイド (Getting Started Guide)
 
