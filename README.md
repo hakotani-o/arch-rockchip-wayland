@@ -243,7 +243,7 @@ vi ~/.local/share/applications/chromium.desktop
 # 変更後:
 Exec=/usr/bin/chromium --ozone-platform=wayland %U
 ```
-* **YouTubeの負荷軽減:** マウスメニューからChromiumを起動し、拡張機能ストアで **「enhanced-h264ify」** を検索してインストールします。これにより、CPUに優しいH.264形式での再生が強制され、劇的に軽快になります。
+* **YouTubeの負荷軽減:** ハードウェアデコード対応カーネルにより劇的に軽快になります。
 
 ---
 
