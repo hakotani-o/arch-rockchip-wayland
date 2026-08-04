@@ -52,11 +52,11 @@ jobs:
         with:
           # 実行するたびにユニークなタグ名（例: build-1, build-2...）を付けます
           tag_name: build-${{ github.run_number }}
-          name: "Orange Pi 5 / 5-PLUS Disk Image Build ${{ github.run_number }}"
+          name: "Test for build (Orange Pi 5 / 5-PLUS Disk Image Build) ${{ github.run_number }}"
           body: |
             Arch linux Rockchip Wayland ディスクイメージ Orange Pi 5 / 5-PLUS 
             ビルド日時: ${{ steps.date.outputs.now }}
-            iカーネル : ${{ steps.kernel.outputs.kernel_version }}
+            カーネル : ${{ steps.kernel.outputs.kernel_version }}
           draft: false
           prerelease: false
           # ここに圧縮済みファイルのパスを指定します
