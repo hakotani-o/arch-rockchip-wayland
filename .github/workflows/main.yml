@@ -55,6 +55,20 @@ jobs:
             Arch linux Rockchip Wayland ディスクイメージ Orange Pi 5 / 5-PLUS 
             ビルド日時: ${{ steps.date.outputs.now }}
             カーネル : ${{ steps.kernel.outputs.kernel_version }}
+            
+            ### VP9 Hardware Decoding Support
+            We have successfully enabled VP9 hardware decoding by applying the following rkvdec kernel patches from the [warpme/minimyth2](https://github.com/warpme/minimyth2) project:
+
+            - `3559-media-rkvdec-fix-PM-runtime-teardown-ordering-in-remove.patch`
+            - `3569-media-rkvdec-prime-VDPU383-deblock-warmup-rk3576.patch`
+            - `3570-media-rkvdec-add-VP9-VDPU381-decoder-support.patch`
+            - `3571-media-rkvdec-vp9-fix-altref-vscale-and-segmap-size-for-2K-decode.patch`
+            - `3572-media-rkvdec-vdpu381-add-VP9-profile-2-10bit-support.patch`
+            - `3573-media-rkvdec-vdpu381-vp9-use-the-real-buffer-stride.patch`
+            - `3574-media-rkvdec-Add-support-for-the-VDPU346-variant.patch`
+
+           **Special thanks to the original authors and the minimyth2 project for creating and publishing these essential patches!**
+
           draft: false
           prerelease: false
           # ここに圧縮済みファイルのパスを指定します
