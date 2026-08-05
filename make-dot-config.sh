@@ -54,6 +54,11 @@ cat ../../config > .config
   ./scripts/config --disable DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
   ./scripts/config --disable DEBUG_INFO_DWARF4
   ./scripts/config --disable DEBUG_INFO_DWARF5
+  ./scripts/config --disable COMPILE_TEST
+  ./scripts/config --disable USBPCWATCHDOG
+  ./scripts/config --disable SSB
+  ./scripts/config --disable BCMA
+
   make olddefconfig
   
   #./scripts/diffconfig .config ../../config | grep "^ " | awk '$2 != "n"' | sed 's/-//' | awk '{ print "CONFIG_" $1 "=" $4 }' >> /home/builder/my-add.txt
