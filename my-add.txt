@@ -1228,7 +1228,7 @@ CONFIG_SND_OSSEMUL=n
 
 # 不要な古いPC用ドライバを親玉ごと一撃で無効化
 CONFIG_SND_AC97_CODEC=n
-CONFIG_SND_DRIVERS=y
+# CONFIG_SND_DRIVERS=y
 CONFIG_SND_PCI=n
 
 # 主要なキーボード・マウス・入力メーカー
