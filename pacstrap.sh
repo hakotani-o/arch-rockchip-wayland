@@ -17,7 +17,8 @@ sudo pacman -S --noconfirm --root ./mnt \
     networkmanager network-manager-applet ttf-dejavu noto-fonts-cjk \
     pipewire-pulse alsa-utils pavucontrol zenity cloud-guest-utils \
     e2fsprogs gvfs udisks2 clapper mpv vulkan-tools mesa-utils \
-    mkinitcpio linux-firmware util-linux
+    mkinitcpio linux-firmware util-linux \
+	qqc2-desktop-style plasma-desktop systemsettings
 
 # kernel (カスタムカーネルパッケージの流し込み)
 yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.1.6-1-aarch64.pkg.tar.*
