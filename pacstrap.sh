@@ -21,8 +21,8 @@ sudo pacman -S --noconfirm --root ./mnt \
 	qqc2-desktop-style plasma-desktop systemsettings
 
 # kernel (カスタムカーネルパッケージの流し込み)
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.1.6-1-aarch64.pkg.tar.*
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-headers-7.1.6-1-aarch64.pkg.tar.*
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.1.8-1-aarch64.pkg.tar.*
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-headers-7.1.8-1-aarch64.pkg.tar.*
 
 # u-boot-update
 sudo tar zxvf /u-boot-menu-4.2.4.tar.gz -C ./mnt/
