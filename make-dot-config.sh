@@ -55,7 +55,7 @@ done
 sed -i 's/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs"/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs\/$kernver"/' ../../PKGBUILD
 sed -i '/conflicts=/d' ../../PKGBUILD 
 sed -i 's/echo "Installing modules..."/mv "${pkgdir}\/boot\/Image.gz" "${pkgdir}\/boot\/vmlinuz-${kernver}"\n  rm "${pkgdir}\/boot\/Image" \n\n\n echo "Installing modules..."/' ../../PKGBUILD
-
+sed -i 's/unset LDFLAGS/unset LDFLAGS\n export KCFLAGS="-march=armv8-a+crypto+crc -mtune=cortex-a76.cortex-a55" \n/' ../../PKGBUILD
 
 #make defconfig
 cat ../../config > .config
