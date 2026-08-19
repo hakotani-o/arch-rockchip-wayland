@@ -43,6 +43,10 @@ chown builder:builder /home/builder/my-add.txt
 mv "$2" /home/builder/make-dot-config.sh
 chown builder:builder /home/builder/make-dot-config.sh
 chmod +x /home/builder/make-dot-config.sh
+mv vsi-iommu.c /home/builder
+chown builder:builder /home/builder/vsi-iommu.c
+mv linux-vsi-iommu.h /home/builder
+chown builder:builder /home/builder/linux-vsi-iommu.h
 
 # === ここから一般ユーザー「builder」として実行 ===
 sudo -u builder bash  << 'EOF'
