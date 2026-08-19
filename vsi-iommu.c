@@ -28,7 +28,7 @@
 #include <linux/pm_runtime.h>
 #include <linux/slab.h>
 #include <linux/spinlock.h>
-/*#include <linux/vsi-iommu.h>*/
+#include <linux/vsi-iommu.h>
 
 #include "iommu-pages.h"
 
