@@ -12,9 +12,9 @@ mkdir -p ./mnt/etc/sddm.conf.d
 cat << 'EOF_SDDM' > ./mnt/etc/sddm.conf.d/autologin.conf
 [Autologin]
 User=setupadmin
+#Session=lxqt-wayland.desktop
 Session=labwc.desktop
 EOF_SDDM
-
 
 # ③ ウィザードスクリプトの配置
 cat << 'EOF' > ./mnt/usr/local/bin/gui-wizard.sh
@@ -103,4 +103,19 @@ cat << 'EOF_CHROME' > ./mnt/etc/chromium-flags.conf
 --enable-features=AcceleratedVideoDecoder,V4l2VideoDecode
 --disable-features=UseChromeOSDirectVideoDecoder
 EOF_CHROME
+
+# ③ SDDMに「Xfce (Wayland)」の選択肢を追加する
+#JFLimさんが動かしていたものと同じ「Xfce (Wayland)」をSDDMのメニューに出現させるため、以下のデスクトップエントリーファイルを生成します。
+
+# 【Xfce Wayland対応】SDDM用のセッションファイルを作成
+mkdir -p ./mnt/usr/share/wayland-sessions
+cat << 'EOF_XFCE_WAY' > ./mnt/usr/share/wayland-sessions/xfce-wayland.desktop
+[Desktop Entry]
+Version=1.0
+Name=Xfce (Wayland)
+Comment=Run Xfce with Labwc backend
+Exec=startxfce4 --wayland
+Type=Application
+DesktopNames=XFCE
+EOF_XFCE_WAY
 
