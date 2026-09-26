@@ -55,6 +55,8 @@ jobs:
             Arch linux Rockchip Wayland ディスクイメージ Orange Pi 5 / 5-PLUS 
             ビルド日時: ${{ steps.date.outputs.now }}
             カーネル : ${{ steps.kernel.outputs.kernel_version }}
+
+            ### LXQt + Labwc +xfce Wayland
             
             ### VP9 Hardware Decoding Support
             We have successfully enabled VP9 hardware decoding by applying the following rkvdec kernel patches from the [warpme/minimyth2](https://github.com/warpme/minimyth2) project:
