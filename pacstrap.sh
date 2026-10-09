@@ -25,8 +25,8 @@ sudo pacstrap ./mnt base vim sudo
 
 
 # kernel (カスタムカーネルパッケージの流し込み)
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.2.8-1-aarch64.pkg.tar.*
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-headers-7.2.8-1-aarch64.pkg.tar.*
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.2.9-1-aarch64.pkg.tar.*
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-headers-7.2.9-1-aarch64.pkg.tar.*
 
 # u-boot-update
 sudo tar zxvf /u-boot-menu-4.2.4.tar.gz -C ./mnt/
