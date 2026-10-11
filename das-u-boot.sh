@@ -51,7 +51,18 @@ echo ""
 	echo 'CONFIG_SYS_SOC="rk3588"' >> configs/$1
 sed -i 's/#ifndef CONFIG_XPL_BUILD/#ifndef CONFIG_XPL_BUILD\n\n #define BOOT_TARGETS    "nvme scsi mmc"\n\n/' include/configs/rockchip-common.h
 
-		make clean $1
+                make clean $1
+                
+#fix(build): fix pylibfdt build error with modern Python3/SWIG environments
+
+#- Replace legacy Python 2 APIs (PyString/PyInt) in libfdt.i_shipped with Python 3 versions
+#- Remove pre-generated libfdt_wrap.c to force regeneration
+
+                # ↓★ここから3行を追加・変更します
+                sed -i 's/PyString_FromString/PyUnicode_FromString/g' scripts/dtc/pylibfdt/libfdt.i_shipped
+                sed -i 's/PyInt_AsLong/PyLong_AsLong/g' scripts/dtc/pylibfdt/libfdt.i_shipped
+                rm -f scripts/dtc/pylibfdt/libfdt_wrap.c
+                
 		make -j8
 		cp u-boot-rockchip.bin ../..
 	echo "dd if=u-boot-rockchip.bin of=/dev/sdX seek=1 bs=32k conv=fsync"
