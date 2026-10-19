@@ -53,9 +53,9 @@ while true; do
     zenity --error --text="パスワードが一致しないか、空欄です。再入力してください。"
 done
 
-sudo useradd -m -s /bin/bash -G wheel,video "$NEW_USER"
+sudo useradd -m -s /bin/bash -G wheel,users,video "$NEW_USER"
 echo "$NEW_USER:$PASS1" | sudo chpasswd
-sudo rm -f /etc/xdg/autostart/first-boot-wizard.desktop
+
 
 if [ -f "/etc/mkinitcpio.conf.org" ]; then
     sudo cp /etc/mkinitcpio.conf.org /etc/mkinitcpio.conf
@@ -69,15 +69,96 @@ if [ -f "/etc/mkinitcpio.conf.org" ]; then
     ) | zenity --text-info --title="システム最適化中" --width=600 --height=400 --auto-scroll
 fi
 
+# ==========================================
+# 1. タイムゾーンの選択・設定
+# ==========================================
+SELECTED_TZ=$(awk '/^[^#]/ {print $3}' /usr/share/zoneinfo/zone.tab | sort | \
+zenity --list \
+  --title="初期設定 - タイムゾーン Time zone" \
+  --text="タイムゾーンを選択してください:" \
+  --column="タイムゾーン" \
+  --width=400 --height=450)
+
+if [ -n "$SELECTED_TZ" ]; then
+    # 起動中なので timedatectl がそのまま使えます
+    sudo  ln -s /usr/share/zoneinfo/"$SELECTED_TZ" /etc/localtime
+fi
+
+
+# ==========================================
+# 2. キーボードレイアウトの選択・設定
+# ==========================================
+# 主要なレイアウトのみを厳選してリスト化（ユーザーが迷わないため）
+SELECTED_KEYMAP=$(zenity --list \
+  --title="初期設定 - キーボード Keyboard" \
+  --text="キーボードの配列を選択してください:" \
+  --column="コード" --column="キーボード配列" \
+  --hide-column=1 \
+  "jp" "日本語配列 (jp)" \
+  "us" "US layout (us)" \
+  "uk" "UK layout (uk)" \
+  --width=500 --height=300)
+
+if [ -n "$SELECTED_KEYMAP" ]; then
+    # localectl コマンドで、コンソールとX11/Wayland両方のキーボードを同時に設定
+    sudo localectl set-x11-keymap "$SELECTED_KEYMAP"
+    echo "XKB_DEFAULT_LAYOUT=$SELECTED_KEYMAP" | sudo tee -a /etc/environment
+    echo "XKB_DEFAULT_MODEL=pc105" | sudo tee -a /etc/environment
+fi
+
+
+# ==========================================
+# 3. システム言語（LANG）の選択・設定
+# ==========================================
+# ディスクイメージ内に事前に生成（locale-gen）されている主要言語を選択肢にする
+SELECTED_LANG=$(zenity --list \
+  --title="初期設定 - 言語 Locale" \
+  --text="システム言語 (LANG) を選択してください:" \
+  --column="ロケール" --column="言語" \
+  --hide-column=1 \
+  "ja_JP.UTF-8" "日本語 (ja_JP.UTF-8)" \
+  "en_US.UTF-8" "English (en_US.UTF-8)" \
+  --width=500 --height=300)
+
+if [ -n "$SELECTED_LANG" ]; then
+    # システム全体のロケールを設定
+    echo "LANG=$SELECTED_LANG" | sudo tee -a /etc/environment
+    sudo sed -i "s/#$SELECTED_LANG/$SELECTED_LANG/" /etc/locale.gen
+    sudo locale-gen
+    sudo sed -i "s/C.UTF-8/$SELECTED_LANG/" /etc/locale.conf
+    sudo localectl set-locale LANG="$SELECTED_LANG"
+fi
+
 sudo rm -f /etc/sddm.conf.d/autologin.conf
 sudo rm -f /etc/sudoers.d/setupadmin
 sudo rm -f /home/setupadmin/.config
+# 次回起動時に setupadmin を完全消去する1回限りのサービスを有効化
+sudo systemctl enable setup-cleanup.service
+
 zenity --info --text="設定が完了しました。システムを再起動します。" --width=300
+sudo rm -f /etc/xdg/autostart/first-boot-wizard.desktop
 sudo reboot
 EOF
 
 # 実行権限を付与
 chmod +x ./mnt/usr/local/bin/gui-wizard.sh
+
+# 6 setupadmin 削除
+cat << 'EOF_SETUPADMIN' > ./mnt/etc/systemd/system/setup-cleanup.service
+[Unit]
+Description=First Boot Cleanup Service
+After=systemd-user-sessions.service
+
+[Service]
+Type=oneshot
+# setupadmin のプロセスを強制終了したあと、ユーザーとホームディレクトリ>を完全削除し、このサービス自体を無効化
+ExecStart=/usr/bin/bash -c "pkill -u setupadmin; userdel -r setupadmin; systemctl disable setup-cleanup.service"
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF_SETUPADMIN
+
 
 # 3. systemd サービスファイルの作成
 cat << EOF4 > ./mnt/etc/systemd/system/firstboot-growroot.service
