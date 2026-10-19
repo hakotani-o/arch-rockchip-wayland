@@ -23,10 +23,14 @@ sudo pacstrap ./mnt base vim sudo
 #    fcitx5-im fcitx5-mozc
 
 
+for i in /my-pkg/*.pkg.tar.*
+do
+	sudo pacman --noconfirm -U $i
+done
 
 # kernel (カスタムカーネルパッケージの流し込み)
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.2.9-1-aarch64.pkg.tar.*
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-headers-7.2.9-1-aarch64.pkg.tar.*
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-*-aarch64.pkg.tar.*
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-headers-*-aarch64.pkg.tar.*
 
 # u-boot-update
 sudo tar zxvf /u-boot-menu-4.2.4.tar.gz -C ./mnt/
