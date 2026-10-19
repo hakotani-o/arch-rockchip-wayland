@@ -2,8 +2,7 @@
 
 name: labwc
 on: workflow_dispatch
-     branches:
-       - main
+
 #workflow_dispatch
 #[push]
 jobs:
