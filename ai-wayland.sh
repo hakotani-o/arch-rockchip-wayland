@@ -65,6 +65,7 @@ if [ -f "/etc/mkinitcpio.conf.org" ]; then
         sudo mkinitcpio -P 2>&1
 	sudo cp /boot/initramfs-linux.img /boot/initrd.img-$(uname -r)
 	sudo rm /boot/initramfs-linux.img
+	sudo ldconfig
         echo "# 再構築が完了しました！"
     ) | zenity --text-info --title="システム最適化中" --width=600 --height=400 --auto-scroll
 fi
