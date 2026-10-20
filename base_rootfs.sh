@@ -25,7 +25,7 @@ if [ $mem_size -gt 13 ]; then
         sudo mount -t tmpfs -o size=10G tmpfs base_camp
 fi
 sudo pacstrap ./base_camp base sudo arch-install-scripts archlinux-keyring
-sudo cp pacstrap.sh ai-wayland.sh firstboot-growroot.sh labwc-10:* ./base_camp
+sudo cp pacstrap.sh ai-wayland.sh firstboot-growroot.sh  ./base_camp
 sudo cp -r my-pkg ./base_camp
 sudo cp -a etc keyrings ./base_camp
 sudo cp linux-aarch64-*-aarch64.pkg.tar.xz  u-boot-menu-4.2.4.tar.gz  ./base_camp
