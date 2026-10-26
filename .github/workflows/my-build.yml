@@ -6,27 +6,6 @@ on: workflow_dispatch
 #[push]
 
 jobs:
-  download:
-    runs-on: ubuntu-24.04-arm
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: |
-          pip install google-api-python-client google-auth
-
-      - name: Run download script
-        env:
-          # GitHub Secrets から環境変数にセットして Python に渡す
-          GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-        run: python .github/scripts/download.py
-        
   command:
     name: Use Linux commands
     runs-on: ubuntu-24.04-arm
