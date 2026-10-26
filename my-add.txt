@@ -40,7 +40,7 @@ CONFIG_PID_NS=y
 CONFIG_NET_NS=y
 CONFIG_SYSFS_DEPRECATED=n
 
-CONFIG_PREEMPT_DYNAMIC=n
+
 
 
 #
@@ -196,17 +196,6 @@ CONFIG_RTW89_8852BE=m
 # CONFIG_RTW89_8852BU=m
 
 # -------------------------------------------------------------
-# Reqest from redha  2026-10-08
-# -------------------------------------------------------------
-CONFIG_BRCMFMAC=m
-CONFIG_BRCMFMAC_PROTO_BCDC=y
-CONFIG_BRCMFMAC_PROTO_MSGBUF=y
-CONFIG_BRCMFMAC_SDIO=y
-CONFIG_BRCMFMAC_USB=y
-CONFIG_BRCMFMAC_PCIE=y
-
-
-# -------------------------------------------------------------
 # 不足分追加 KOKOKARA
 # -------------------------------------------------------------
 CONFIG_PERSISTENT_KEYRINGS=y
@@ -279,13 +268,16 @@ CONFIG_B43LEGACY=n
 CONFIG_TG3=n
 CONFIG_FORCEDETH=n
 
-CONFIG_QCOM_HIDMA_MGMT=n
-CONFIG_QCOM_HIDMA=n
 
 # ---- after add -------
 CONFIG_SSB_POSSIBLE=n
 CONFIG_BCMA_POSSIBLE=n
 CONFIG_BCMA=n
+
+# ---- 7.3 --------
+CONFIG_NET_VENDOR_ZTE=n
+CONFIG_WLAN_VENDOR_MORSEMICRO=n
+CONFIG_MFD_ROHM_PWRBUTTON=n
 
 
 #
