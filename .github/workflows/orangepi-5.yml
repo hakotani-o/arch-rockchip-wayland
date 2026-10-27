@@ -58,7 +58,8 @@ jobs:
             ビルド日時: ${{ steps.date.outputs.now }}
             カーネル : ${{ steps.kernel.outputs.kernel_version }}
 
-            ### Kernel 7.2.13
+            ### Kernel 7.3.0  2026-10-27
+            ### Kernel 7.2.13 2026-10-27
             ### Labwc optimization  2026-10-20
             ### das-u-boot.sh    update    2026-10-11
             ##### fix(build): fix pylibfdt build error with modern Python3/SWIG environments
