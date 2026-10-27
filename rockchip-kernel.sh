@@ -59,12 +59,7 @@ git remote add origin https://github.com/archlinuxarm/PKGBUILDs/
 echo "core/linux-aarch64/*" >> .git/info/sparse-checkout
 
 # 必要なフォルダだけをプル
-#git pull origin master
-
-# 7.2.13
-git fetch origin master
-git checkout 0e55b970ab6f10c2c1b1bbe8e31bbd3d9ca0e74b
-
+git pull origin master
 
 cd core/linux-aarch64
 echo "------------- core/linux-aarch64 ------------------"
@@ -85,10 +80,6 @@ sed -i 's/git apply --whitespace=nowarn ..\/patch-${pkgver}/# git  apply --white
 sed -i 's/git apply/# git apply/' PKGBUILD
 cp linux-aarch64.install linux-aarch64-rockchip.install
 cp linux-aarch64-chromebook.install linux-aarch64-rockchip-chromebook.install
-
-# 7.2.13
-sed -i 's/^pkgver=7.2.12/pkgver=7.2.13/' PKGBUILD
-updpkgsums
 
 # ソースの展開とチェックサム更新
 #updpkgsums
