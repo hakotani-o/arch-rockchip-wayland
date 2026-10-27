@@ -59,11 +59,7 @@ git remote add origin https://github.com/archlinuxarm/PKGBUILDs/
 echo "core/linux-aarch64/*" >> .git/info/sparse-checkout
 
 # 必要なフォルダだけをプル
-#git pull origin master
-
-# 7.2.13
-git fetch origin master
-git checkout 0e55b970ab6f10c2c1b1bbe8e31bbd3d9ca0e74b
+git pull origin master
 
 cd core/linux-aarch64
 echo "------------- core/linux-aarch64 ------------------"
