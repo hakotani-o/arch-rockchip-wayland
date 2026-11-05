@@ -3,9 +3,9 @@ set -eE
 
 start_time=`date`
 
-	rm -rf my-pkg && mkdir my-pkg
-	./das-u-boot.sh orangepi-5-rk3588s_defconfig 2>&1|tee log
-	./base_kernel.sh
+	
+#	./das-u-boot.sh orangepi-5-rk3588s_defconfig 2>&1|tee log
+#	./base_kernel.sh
 #	./pkg_labwc.sh
 	./base_rootfs.sh
 	sudo ./disk_image.sh orangepi-5 rk3588s-orangepi-5
