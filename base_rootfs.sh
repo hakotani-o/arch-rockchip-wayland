@@ -25,7 +25,7 @@ if [ $mem_size -gt 13 ]; then
         sudo mount -t tmpfs -o size=10G tmpfs base_camp
 fi
 
-yes | sudo pacman -S python-pkgconfig python-pipx
+yes | sudo pacman -S --need python-pkgconfig python-pipx
 export PATH="$HOME/.local/bin:$PATH"
 pipx install --preinstall filelock gdown
 FILE_ID="1BekoyjDO8pMZ8PK7CIBIRjBidjEtkI4T"
