@@ -33,8 +33,9 @@ do
 done
 
 # kernel (カスタムカーネルパッケージの流し込み)
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.1-2-aarch64.pkg.tar.*
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-headers-7.3.1-2-aarch64.pkg.tar.*
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.1-2-7.3.1-2-aarch64.pkg.tar.xz
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.1-2-headers-7.3.1-2-aarch64.pkg.tar.xz
+
 
 # u-boot-update
 sudo tar zxvf /u-boot-menu-4.2.4.tar.gz -C ./mnt/
