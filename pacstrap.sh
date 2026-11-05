@@ -18,8 +18,7 @@ sudo pacstrap ./mnt base vim sudo
     mkinitcpio linux-firmware util-linux \
     lxqt-about lxqt-admin lxqt-config lxqt-notificationd \
     lxqt-policykit lxqt-runner lxqt-session lxqt-themes \
-    xorg-xwayland 
-#    xfce4 xfce4-goodies xorg-xwayland 
+    xfce4 xfce4-goodies xorg-xwayland 
 #    fcitx5-im fcitx5-mozc
 
 bsdtar xf /MY.tar
