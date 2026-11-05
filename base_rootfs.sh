@@ -5,7 +5,8 @@ set -x
 kernel=$(uname -a|awk '{ print $2 }')
 
 if [ $kernel != "archlinux" ]; then
-sudo apt install -y arch-install-scripts archlinux-keyring pacman-package-manager systemd-container libalpm16
+sudo apt install -y arch-install-scripts archlinux-keyring pacman-package-manager systemd-container libalpm13t64
+# libalpm16
 # libalpm13t64 
 sudo pacman-key --init
 sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
