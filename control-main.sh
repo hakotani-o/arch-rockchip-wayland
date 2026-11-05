@@ -6,7 +6,7 @@ start_time=`date`
 	
 	./das-u-boot.sh orangepi-5-rk3588s_defconfig 2>&1|tee log
 	./base_kernel.sh
-	ls -l
+	ls -l ./base_camp
 	./base_rootfs.sh
 	sudo ./disk_image.sh orangepi-5 rk3588s-orangepi-5
 	./das-u-boot.sh orangepi-5-plus-rk3588_defconfig
