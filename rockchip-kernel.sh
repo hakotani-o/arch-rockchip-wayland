@@ -1,10 +1,9 @@
 #!/bin/bash
 set -eE
-set -x  # 進行状況がわかるようにデバッグ表示を追加
 
 # 引数のチェック（my-add.txt が指定されているか）
 if [ -z "$2" ]; then
-    echo "エラー: 第2引数に /make-dot-config.sh のパスを指定してください。"
+    echo "エラー: 第1引数に my-add.txt のパスを指定してください。"
     exit 1
 fi
 
@@ -43,7 +42,6 @@ chown builder:builder /home/builder/my-add.txt
 mv "$2" /home/builder/make-dot-config.sh
 chown builder:builder /home/builder/make-dot-config.sh
 chmod +x /home/builder/make-dot-config.sh
-
 # === ここから一般ユーザー「builder」として実行 ===
 sudo -u builder bash  << 'EOF'
 set -eE
@@ -59,7 +57,9 @@ git remote add origin https://github.com/archlinuxarm/PKGBUILDs/
 echo "core/linux-aarch64/*" >> .git/info/sparse-checkout
 
 # 必要なフォルダだけをプル
-git pull origin master
+#git pull origin master
+git fetch origin master
+git checkout 29b3cd151bd9209545e7ae7261d67b6439ac69b2
 
 cd core/linux-aarch64
 echo "------------- core/linux-aarch64 ------------------"
@@ -74,12 +74,17 @@ echo "---------------------------------------------------"
 # 3. 巨大なデバッグ情報を無効化してメモリ不足・容量圧迫を回避
 # 4. make olddefconfig で新パラメータを自動補完し、configファイルとして確定させる
 # =========================================================
-sed -i 's/make prepare/\/home\/builder\/make-dot-config.sh/' PKGBUILD
-sed -i 's/pkgbase=linux-aarch64/pkgbase=linux-aarch64-rockchip/' PKGBUILD
-sed -i 's/git apply --whitespace=nowarn ..\/patch-${pkgver}/# git  apply --whitespace=nowarn ..\/patch-${pkgver}\n echo "git  apply --whitespace=nowarn ..\/patch-${pkgver}"\n/' PKGBUILD
-sed -i 's/git apply/# git apply/' PKGBUILD
-cp linux-aarch64.install linux-aarch64-rockchip.install
-cp linux-aarch64-chromebook.install linux-aarch64-rockchip-chromebook.install
+cp PKGBUILD ~
+sed -i 's|make prepare| /home/builder/make-dot-config.sh|' PKGBUILD
+CURRENT_PKGVER=$( grep ^pkgver PKGBUILD | cut -d= -f2 )
+CURRENT_PKGREL=$( grep ^pkgrel PKGBUILD | cut -d= -f2 )
+CURRENT_VERSION=$CURRENT_PKGVER-$CURRENT_PKGREL
+sed -i "s|pkgbase=linux-aarch64|pkgbase=linux-aarch64-rockchip-$CURRENT_VERSION|" PKGBUILD
+sed -i 's|git apply --whitespace=nowarn ../patch-${pkgver}|# git  apply --whitespace=nowarn ../patch-${pkgver}\n echo "git  apply --whitespace=nowarn ../patch-${pkgver}"\n|' PKGBUILD
+sed -i 's|git apply|# git apply|' PKGBUILD
+cp linux-aarch64.install linux-aarch64-rockchip-${CURRENT_VERSION}.install
+cp linux-aarch64-chromebook.install linux-aarch64-rockchip-${CURRENT_VERSION}-chromebook.install
+
 
 # ソースの展開とチェックサム更新
 #updpkgsums
@@ -96,8 +101,8 @@ EOF
 # === 一般ユーザーでの実行ここまで ===
 
 # 出来上がったパッケージをコンテナのルート「/」に配置
-cp /home/builder/kernel-org/core/linux-aarch64/linux-aarch64-rockchip-[0-9]*-aarch64.pkg.tar.* /
-cp /home/builder/kernel-org/core/linux-aarch64/linux-aarch64-rockchip-headers-[0-9]*-aarch64.pkg.tar.* /
+rm /home/builder/kernel-org/core/linux-aarch64/linux-aarch64-rockchip-*chromebook*-aarch64.pkg.tar.*
+cp /home/builder/kernel-org/core/linux-aarch64/linux-aarch64-rockchip-*-aarch64.pkg.tar.* /
 
 # ビルドログを root 権限で / に退避（base_kernel.sh が回収できるようにする）
 cp /home/builder/*.txt / 2>/dev/null || true
