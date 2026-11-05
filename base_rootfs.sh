@@ -14,8 +14,11 @@ sudo cp  -a keyrings /usr/share/
 sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
 sudo cp etc/pacman.conf /etc
 sudo pacman-key --populate archlinuxarm
+pip3 install --break-system-packages gdown
 else
 sudo pacman -S --noconfirm arch-install-scripts
+yes | sudo pacman -S python-pkgconfig python-pipx
+pipx install --preinstall filelock gdown
 fi
 sudo pacman -Syyu
 
@@ -25,9 +28,9 @@ if [ $mem_size -gt 13 ]; then
         sudo mount -t tmpfs -o size=10G tmpfs base_camp
 fi
 
-yes | sudo pacman -S --need python-pkgconfig python-pipx
+
 export PATH="$HOME/.local/bin:$PATH"
-pipx install --preinstall filelock gdown
+
 FILE_ID="1BekoyjDO8pMZ8PK7CIBIRjBidjEtkI4T"
 gdown https://drive.google.com/uc?id=$FILE_ID
 
