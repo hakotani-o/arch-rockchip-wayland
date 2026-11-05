@@ -57,7 +57,7 @@ jobs:
             Arch linux Rockchip Wayland ディスクイメージ Orange Pi 5 / 5-PLUS 
             ビルド日時: ${{ steps.date.outputs.now }}
             カーネル : ${{ steps.kernel.outputs.kernel_version }}
-           
+            
             ### rootfs Package Optimization  2026-11-05
             ### Kernel Modified several configuration settings 2026-11-05
             ## CONFIG_DEBUG_PREEMPT=n
