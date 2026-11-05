@@ -1,12 +1,11 @@
 #!/bin/bash
 set -eE
-set -x
 
 kernel=$(uname -a|awk '{ print $2 }')
 
 if [ $kernel != "archlinux" ]; then
-sudo apt install -y arch-install-scripts archlinux-keyring pacman-package-manager systemd-container libalpm13t64
-#libalpm16
+sudo apt install -y arch-install-scripts archlinux-keyring pacman-package-manager systemd-container libalpm16
+# libalpm13t64
 fi
 sudo mkdir -p /etc/pacman.d
 sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d/
@@ -17,7 +16,7 @@ sudo pacman-key --init
 sudo pacman-key --populate archlinuxarm
 sudo pacman -Syyu
 if [ $kernel == "archlinux" ]; then
-    sudo pacman -S --noconfirm arch-install-scripts
+ sudo pacman -S --noconfirm arch-install-scripts
 fi
 
 rm -rf linux-aarch64-*
@@ -36,12 +35,12 @@ sudo cp rockchip-kernel.sh my-add.txt make-dot-config.sh ./base_camp
 sudo systemd-nspawn -D ./base_camp --resolv-conf=replace-host /rockchip-kernel.sh /my-add.txt /make-dot-config.sh
 
 # 成果物の名前が .pkg.tar.zst になっている可能性を考慮して修正
-rm -f base_camp/linux-aarch64-rockchip-chromebook-*
 cp base_camp/linux-aarch64-rockchip-*.pkg.tar.* .
 cp base_camp/arch-build-log.txt .
 cp base_camp/Config-chg .
 
 if [ $mem_size -gt 13 ]; then
         sudo umount base_camp
+	rm -rf base_camp
         sleep 2
 fi 

@@ -4,7 +4,6 @@ set -eE
 sudo pacman-key --init
 sudo cp -a keyrings /usr/share/pacman
 sudo pacman-key --populate archlinuxarm
-sudo pacman -Syyu
 
 sudo rm -rf ./mnt && sudo mkdir ./mnt
 sudo pacstrap ./mnt base vim sudo 
@@ -19,18 +18,23 @@ sudo pacstrap ./mnt base vim sudo
     mkinitcpio linux-firmware util-linux \
     lxqt-about lxqt-admin lxqt-config lxqt-notificationd \
     lxqt-policykit lxqt-runner lxqt-session lxqt-themes \
-    xfce4 xfce4-goodies xorg-xwayland 
+    xorg-xwayland 
+#    xfce4 xfce4-goodies xorg-xwayland 
 #    fcitx5-im fcitx5-mozc
 
-
-for i in /my-pkg/*.pkg.tar.*
+bsdtar xf /MY.tar
+for i in `pacman -Q --root ./mnt`
 do
-	sudo pacman --noconfirm -U $i
+	pkg_name=$( echo $i | awk '{ print $1 }' )
+	if [ -f MY-rockchip/"${pkg_name}"* ]; then
+		echo $pkg_name
+		yes | sudo pacman -U --root ./mnt MY-rockchip/"${pkg_name}"*
+	fi
 done
 
 # kernel (カスタムカーネルパッケージの流し込み)
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-*-aarch64.pkg.tar.*
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-headers-*-aarch64.pkg.tar.*
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.1-2-aarch64.pkg.tar.*
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-headers-7.3.1-2-aarch64.pkg.tar.*
 
 # u-boot-update
 sudo tar zxvf /u-boot-menu-4.2.4.tar.gz -C ./mnt/
@@ -54,7 +58,7 @@ echo "kernel_version=$kernel_version" > /kernel_version
 # キャッシュクリア
 yes | sudo pacman -Scc --root ./mnt 
 
-sudo sed -i '$a NoDisplay=true' ./mnt/usr/share/xsessions/xfce.desktop
+#sudo sed -i '$a NoDisplay=true' ./mnt/usr/share/xsessions/xfce.desktop
 sudo sed -i '$a NoDisplay=true' ./mnt/usr/share/xsessions/lxqt.desktop
 sudo sed -i '$a NoDisplay=true' ./mnt//usr/share/wayland-sessions/lxqt-wayland.desktop
 
