@@ -53,7 +53,7 @@ echo "XDG_CURRENT_DESKTOP=KDE" >> ./mnt/etc/environment
 echo "XDG_SESSION_TYPE=wayland" >> ./mnt/etc/environment
 
 sudo ./ai-wayland.sh
-kernel_version=$( ls ./mnt/boot/vmlinuz*| sed 's/vmlinuz-/ /'| sed 's/-aarch64-rockchip//' | awk '{ print $2 }' )
+kernel_version=$( ls ./mnt/boot/vmlinuz*| sed 's/vmlinuz-/ /'| sed 's/-aarch64-rockchip//' | sed 's/-/ /g' | awk '{ print $2 "-" $3 }' )
 echo "kernel_version=$kernel_version" > /kernel_version
 # キャッシュクリア
 yes | sudo pacman -Scc --root ./mnt 
