@@ -84,14 +84,14 @@ sed -i 's|git apply --whitespace=nowarn ../patch-${pkgver}|# git  apply --whites
 sed -i 's|git apply|# git apply|' PKGBUILD
 cp linux-aarch64.install linux-aarch64-rockchip-${CURRENT_VERSION}.install
 cp linux-aarch64-chromebook.install linux-aarch64-rockchip-${CURRENT_VERSION}-chromebook.install
-
+sed -i 's|default_image="/boot/initramfs-linux.img"|default_image="/boot/initrd.img-${ALL_kver}"|' linux.preset
 
 # ソースの展開とチェックサム更新
 #updpkgsums
 #makepkg -od --noconfirm
 
 # チェックサムの再更新
-#updpkgsums
+updpkgsums
 
 # カーネルのビルド（--noconfirm で依存関係の自動インストールを許可）
 MAKEFLAGS="-j$(nproc)" makepkg -s 2>&1|tee ~/arch-build-log.txt
