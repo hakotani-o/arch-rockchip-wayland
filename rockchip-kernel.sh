@@ -59,7 +59,7 @@ echo "core/linux-aarch64/*" >> .git/info/sparse-checkout
 # 必要なフォルダだけをプル
 #git pull origin master
 git fetch origin master
-git checkout 29b3cd151bd9209545e7ae7261d67b6439ac69b2
+git checkout e4712ecf55758229745fb683c5b94adb928de5b1
 
 cd core/linux-aarch64
 echo "------------- core/linux-aarch64 ------------------"
