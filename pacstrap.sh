@@ -32,8 +32,8 @@ sudo pacstrap ./mnt base vim sudo
 #done
 
 # kernel (カスタムカーネルパッケージの流し込み)
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.1-2-7.3.1-2-aarch64.pkg.tar.xz
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.1-2-headers-7.3.1-2-aarch64.pkg.tar.xz
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.3-1-7.3.3-1-aarch64.pkg.tar.xz
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.3-1-headers-7.3.3-1-aarch64.pkg.tar.xz
 
 
 # u-boot-update
