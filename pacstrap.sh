@@ -21,15 +21,15 @@ sudo pacstrap ./mnt base vim sudo
     xfce4 xfce4-goodies xorg-xwayland 
 #    fcitx5-im fcitx5-mozc
 
-bsdtar xf /MY.tar
-for i in `pacman -Q --root ./mnt`
-do
-	pkg_name=$( echo $i | awk '{ print $1 }' )
-	if [ -f MY-rockchip/"${pkg_name}"* ]; then
-		echo $pkg_name
-		yes | sudo pacman -U --root ./mnt MY-rockchip/"${pkg_name}"*
-	fi
-done
+#bsdtar xf /MY.tar
+#for i in `pacman -Q --root ./mnt`
+#do
+#	pkg_name=$( echo $i | awk '{ print $1 }' )
+#	if [ -f MY-rockchip/"${pkg_name}"* ]; then
+#		echo $pkg_name
+#		yes | sudo pacman -U --root ./mnt MY-rockchip/"${pkg_name}"*
+#	fi
+#done
 
 # kernel (カスタムカーネルパッケージの流し込み)
 yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.1-2-7.3.1-2-aarch64.pkg.tar.xz
