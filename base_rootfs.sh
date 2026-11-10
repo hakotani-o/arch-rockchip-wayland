@@ -13,12 +13,12 @@ sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
 sudo cp  -a keyrings /usr/share/
 sudo cp  etc/pacman.d/mirrorlist /etc/pacman.d
 sudo cp etc/pacman.conf /etc
-sudo pacman-key --populate archlinuxarm
-pip3 install --break-system-packages gdown
+#sudo pacman-key --populate archlinuxarm
+#pip3 install --break-system-packages gdown
 else
 sudo pacman -S --noconfirm arch-install-scripts
-yes | sudo pacman -S python-pkgconfig python-pipx
-pipx install --preinstall filelock gdown
+#yes | sudo pacman -S python-pkgconfig python-pipx
+#pipx install --preinstall filelock gdown
 fi
 sudo pacman -Syyu
 
@@ -29,13 +29,13 @@ if [ $mem_size -gt 13 ]; then
 fi
 
 
-export PATH="$HOME/.local/bin:$PATH"
+#export PATH="$HOME/.local/bin:$PATH"
 
-FILE_ID="1BekoyjDO8pMZ8PK7CIBIRjBidjEtkI4T"
-gdown https://drive.google.com/uc?id=$FILE_ID
+#FILE_ID="1BekoyjDO8pMZ8PK7CIBIRjBidjEtkI4T"
+#gdown https://drive.google.com/uc?id=$FILE_ID
 
 sudo pacstrap ./base_camp base sudo arch-install-scripts archlinux-keyring
-sudo cp pacstrap.sh ai-wayland.sh firstboot-growroot.sh MY.tar ./base_camp
+sudo cp pacstrap.sh ai-wayland.sh firstboot-growroot.sh ./base_camp
 sudo cp -a etc keyrings ./base_camp
 sudo cp linux-aarch64-*-aarch64.pkg.tar.xz  u-boot-menu-4.2.4.tar.gz  ./base_camp
 sudo systemd-nspawn -D ./base_camp --resolv-conf=replace-host --as-pid2 /pacstrap.sh
