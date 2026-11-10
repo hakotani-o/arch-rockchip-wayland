@@ -78,11 +78,14 @@ sed -i 's/make prepare/\/home\/builder\/make-dot-config.sh/' PKGBUILD
 sed -i 's/pkgbase=linux-aarch64/pkgbase=linux-aarch64-rockchip/' PKGBUILD
 sed -i 's/git apply --whitespace=nowarn ..\/patch-${pkgver}/# git  apply --whitespace=nowarn ..\/patch-${pkgver}\n echo "git  apply --whitespace=nowarn ..\/patch-${pkgver}"\n/' PKGBUILD
 sed -i 's/git apply/# git apply/' PKGBUILD
-cp linux-aarch64.install linux-aarch64-rockchip.install
-cp linux-aarch64-chromebook.install linux-aarch64-rockchip-chromebook.install
+CURRENT_PKGVER=$( grep ^pkgver PKGBUILD | cut -d= -f2 )
+CURRENT_PKGREL=$( grep ^pkgrel PKGBUILD | cut -d= -f2 )
+CURRENT_VERSION=$CURRENT_PKGVER-$CURRENT_PKGREL
+sed -i "s|pkgbase=linux-aarch64|pkgbase=linux-aarch64-rockchip-$CURRENT_VERSION|" PKGBUILD
+cp linux-aarch64.install linux-aarch64-rockchip-${CURRENT_VERSION}.install
+cp linux-aarch64-chromebook.install linux-aarch64-rockchip-${CURRENT_VERSION}-chromebook.install
 
-# 7.2.13
-sed -i 's/^pkgver=7.2.12/pkgver=7.2.13/' PKGBUILD
+sed -i 's|default_image="/boot/initramfs-linux.img"|default_image="/boot/initrd.img-${ALL_kver}"|' linux.preset
 updpkgsums
 
 # ソースの展開とチェックサム更新
