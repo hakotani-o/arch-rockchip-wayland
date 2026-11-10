@@ -176,7 +176,7 @@ sed -i 's/^HOOKS=(.*/HOOKS=(base systemd modconf kms keyboard sd-vconsole block 
 
 # その後、前述した通りchroot内で再ビルド
 #chroot ${mount_point}/writable/ /bin/bash -c "mkinitcpio -P && /usr/local/bin/generate-extlinux.sh && sync"
-chroot ${mount_point}/writable/ /bin/bash -c "mkinitcpio -P && mv /boot/initramfs-linux.img /boot/initrd.img$kernel_version && sync"
+chroot ${mount_point}/writable/ /bin/bash -c "mkinitcpio -P && sync"
 
 # u-boot-update
 chroot ${mount_point}/writable/ /usr/local/sbin/u-boot-update
