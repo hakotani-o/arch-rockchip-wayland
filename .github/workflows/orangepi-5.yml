@@ -60,34 +60,37 @@ jobs:
             
             ### rootfs Package Optimization  2026-11-05
             ### Kernel Modified several configuration settings 2026-11-05
-            ## CONFIG_DEBUG_PREEMPT=n
-            ## Tools such as `iotop`, which provide real-time, per-process I/O usage details, will no longer function.
-            ## CONFIG_SCHEDSTATS=n
-            ## CONFIG_TASKSTATS=n
-            ## CONFIG_TASK_DELAY_ACCT=n
-            ## CONFIG_TASK_XACCT=n
-            ## CONFIG_TASK_IO_ACCOUNTING=n
-            ## May be required for monitoring overall system load
-            ## CONFIG_PSI=n
-            ## CONFIG_BSD_PROCESS_ACCT=n
-            ## CONFIG_BSD_PROCESS_ACCT_V3=n
-            ## CONFIG_IRQ_TIME_ACCOUNTING=n
-            ## CONFIG_STACKTRACE=n
-            ## CONFIG_LOCK_DEBUGGING_SUPPORT=n
-            ## CONFIG_SCHED_INFO=n
-            ## CONFIG_DEBUG_VM=n
-            ## CONFIG_DEBUG_VM_PGTABLE=n
-            ## CONFIG_DEBUG_VM_IRQSOFF=n
-            ## CONFIG_SLUB_DEBUG=n
-            ## CONFIG_KGDB=n
-
+            #### CONFIG_DEBUG_PREEMPT=n
+            #### Tools such as `iotop`, which provide real-time, per-process I/O usage details, will no longer function.
+            #### CONFIG_SCHEDSTATS=n
+            #### CONFIG_TASKSTATS=n
+            #### CONFIG_TASK_DELAY_ACCT=n
+            #### CONFIG_TASK_XACCT=n
+            #### CONFIG_TASK_IO_ACCOUNTING=n
+            #### May be required for monitoring overall system load
+            #### CONFIG_PSI=n
+            #### CONFIG_BSD_PROCESS_ACCT=n
+            #### CONFIG_BSD_PROCESS_ACCT_V3=n
+            #### CONFIG_IRQ_TIME_ACCOUNTING=n
+            #### CONFIG_STACKTRACE=n
+            #### CONFIG_LOCK_DEBUGGING_SUPPORT=n
+            #### CONFIG_SCHED_INFO=n
+            #### CONFIG_DEBUG_VM=n
+            #### CONFIG_DEBUG_VM_PGTABLE=n
+            #### CONFIG_DEBUG_VM_IRQSOFF=n
+            #### CONFIG_SLUB_DEBUG=n
+            #### CONFIG_KGDB=n
+            ---
             ### Kernel 7.3.0-1 2026-10-27
             ### Kernel 7.2.13 2026-10-27
+            ---
             ### Labwc optimization  2026-10-20
+            ---
             ### das-u-boot.sh    update    2026-10-11
             ##### fix(build): fix pylibfdt build error with modern Python3/SWIG environments
             ##### - Replace legacy Python 2 APIs (PyString/PyInt) in libfdt.i_shipped with Python 3 versions
             ##### - Remove pre-generated libfdt_wrap.c to force regeneration
+            ---
 
             ### Add CONFIG_BRCMFMAC      2026-10-08
             
