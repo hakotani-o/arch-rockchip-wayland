@@ -29,7 +29,7 @@ sudo cp rockchip-labwc.sh ./base_camp
 sudo cp -a etc keyrings ./base_camp
 sudo mkdir -p ./base_camp/MY-rockchip
 sudo systemd-nspawn -D ./base_camp --resolv-conf=replace-host --as-pid2 /rockchip-labwc.sh
-cp base_camp/MY-rockchip/* my-pkg
+cp base_camp/MY-rockchip/* .
 cp base_camp/arch-labwc.txt .
 if [ $mem_size -gt 13 ]; then
         sudo umount base_camp
