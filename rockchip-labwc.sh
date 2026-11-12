@@ -61,10 +61,10 @@ cp PKGBUILD PKGBUILD.org
 
 SED_FLAGS='   export V=1\n  export RUSTFLAGS="-C opt-level=2 -C target-cpu=cortex-a76" \n export CFLAGS="-O3 -mcpu=cortex-a76.cortex-a55+crypto+dotprod+nosve -pipe -fno-plt"\n  export CXXFLAGS="${CFLAGS}"\n'
 # ※ 警告を回避し、dotprod（AI/ベクトル演算）などの機能をフル有効化
-sed -i "s/arch=(x86_64)/arch=(aarch64)\nepoch=10/" PKGBUILD
-sed -i "s/arch=('x86_64')/arch=('aarch64')\nepoch=10/" PKGBUILD
-sed -i 's/arch=("x86_64")/arch=("aarch64")\nepoch=10/' PKGBUILD
-sed -i "/epoch=10/a \\${SED_FLAGS}" PKGBUILD
+sed -i "s/arch=(x86_64)/arch=(aarch64)\n#epoch=10/" PKGBUILD
+sed -i "s/arch=('x86_64')/arch=('aarch64')\n#epoch=10/" PKGBUILD
+sed -i 's/arch=("x86_64")/arch=("aarch64")\n#epoch=10/' PKGBUILD
+sed -i "/#epoch=10/a \\${SED_FLAGS}" PKGBUILD
 
 sed -i "s/meson compile -C build/meson compile -C build -v/" PKGBUILD
 
