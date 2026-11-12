@@ -124,6 +124,7 @@ jobs:
             ./Arch-linux-*img.xz
             ./linux-aarch64-rockchip-7*
             ./linux-aarch64-rockchip-headers-7*
+            ./labwc*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
