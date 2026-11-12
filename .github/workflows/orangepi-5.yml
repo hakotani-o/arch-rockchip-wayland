@@ -57,7 +57,8 @@ jobs:
             Arch linux Rockchip Wayland ディスクイメージ Orange Pi 5 / 5-PLUS 
             ビルド日時: ${{ steps.date.outputs.now }}
             カーネル : ${{ steps.kernel.outputs.kernel_version }}
-            ### Kernel update 7.3.4-1 2026-11-12
+            
+            ### Kernel version update 7.3.4-1 2026-11-12
             ---
             ### rootfs Package Optimization  2026-11-05
             ### Kernel Modified several configuration settings 2026-11-05
