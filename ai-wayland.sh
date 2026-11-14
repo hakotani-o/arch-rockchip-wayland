@@ -182,7 +182,7 @@ EOF4
 # 「/etc/chromium-flags.conf」として1行ずつフラグを並べる仕様が一般的です
 mkdir -p ./mnt/etc
 cat << 'EOF_CHROME' > ./mnt/etc/chromium-flags.conf
---enable-features=AcceleratedVideoDecoder,V4l2VideoDecode
+--enable-features=AcceleratedVideoDecoder,V4l2VideoDecoder
 --disable-features=UseChromeOSDirectVideoDecoder
 EOF_CHROME
 
