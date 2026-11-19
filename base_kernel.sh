@@ -39,7 +39,7 @@ sudo systemd-nspawn -D ./base_camp --resolv-conf=replace-host /rockchip-kernel.s
 rm -f base_camp/linux-aarch64-rockchip-chromebook-*
 cp base_camp/linux-aarch64-rockchip-*.pkg.tar.* .
 cp base_camp/arch-build-log.txt .
-cp base_camp/Config-chg .
+sudo cp base_camp/Config-chg .
 
 if [ $mem_size -gt 13 ]; then
         sudo umount base_camp
