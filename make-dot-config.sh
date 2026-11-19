@@ -66,6 +66,6 @@ cat ../../config > .config
   sed -i 's/CONFIG_LOCALVERSION="-ARCH"/CONFIG_LOCALVERSION=""/' .config
   cp .config ../../config
   cp .config ../config
-  cp .config $1/Config-chg
+  sudo cp .config /Config-chg
   make prepare
 
