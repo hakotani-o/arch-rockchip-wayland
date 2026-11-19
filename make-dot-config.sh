@@ -54,7 +54,7 @@ sed -i 's/unset LDFLAGS/unset LDFLAGS\n export KCFLAGS="-mcpu=native" \n export 
 
 #make defconfig
 cat ../../config > .config
-  ./scripts/kconfig/merge_config.sh -m .config $1/my-add.txt
+  ./scripts/kconfig/merge_config.sh -m .config /home/builder/my-add.txt
   ./scripts/config --set-val DEBUG_INFO_NONE y
   ./scripts/config --disable DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
   ./scripts/config --disable DEBUG_INFO_DWARF4
