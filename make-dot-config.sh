@@ -48,13 +48,13 @@ done
 sed -i 's/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs"/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs\/$kernver"/' ../../PKGBUILD
 sed -i '/conflicts=/d' ../../PKGBUILD 
 sed -i 's/echo "Installing modules..."/mv "${pkgdir}\/boot\/Image.gz" "${pkgdir}\/boot\/vmlinuz-${kernver}"\n  rm "${pkgdir}\/boot\/Image" \n\n\n echo "Installing modules..."/' ../../PKGBUILD
-#sed -i 's/unset LDFLAGS/unset LDFLAGS\n export KCFLAGS="-march=armv8-a+crypto+crc -mtune=cortex-a76.cortex-a55" \n/' ../../PKGBUILD
-sed -i 's/unset LDFLAGS/unset LDFLAGS\n export KCFLAGS="-mcpu=cortex-a76.cortex-a55+crypto+dotprod+nosve -fno-plt" \n/' ../../PKGBUILD
+#sed -i 's/unset LDFLAGS/unset LDFLAGS\n export KCFLAGS="-mcpu=cortex-a76.cortex-a55+crypto+dotprod+nosve -fno-plt" \n/' ../../PKGBUILD
+sed -i 's/unset LDFLAGS/unset LDFLAGS\n export KCFLAGS="-mcpu=native" \n export MAKEFLAGS="V=1"\n/' ../../PKGBUILD
 
 
 #make defconfig
 cat ../../config > .config
-  ./scripts/kconfig/merge_config.sh -m .config /home/builder/my-add.txt
+  ./scripts/kconfig/merge_config.sh -m .config $1/my-add.txt
   ./scripts/config --set-val DEBUG_INFO_NONE y
   ./scripts/config --disable DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
   ./scripts/config --disable DEBUG_INFO_DWARF4
@@ -62,19 +62,10 @@ cat ../../config > .config
 
   make olddefconfig
   
-  #./scripts/diffconfig .config ../../config | grep "^ " | awk '$2 != "n"' | sed 's/-//' | awk '{ print "CONFIG_" $1 "=" $4 }' >> /home/builder/my-add.txt
-  #rm .config
-  #make defconfig
-  #./scripts/kconfig/merge_config.sh -m .config /home/builder/my-add.txt
-  #./scripts/config --set-val DEBUG_INFO_NONE y
-  #./scripts/config --disable DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
-  #./scripts/config --disable DEBUG_INFO_DWARF4
-  #./scripts/config --disable DEBUG_INFO_DWARF5
-  #make olddefconfig
 
   sed -i 's/CONFIG_LOCALVERSION="-ARCH"/CONFIG_LOCALVERSION=""/' .config
   cp .config ../../config
   cp .config ../config
-sudo cp .config /Config-chg
+  cp .config $1/Config-chg
   make prepare
 

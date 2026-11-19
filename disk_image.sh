@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eE 
+set -x
 trap 'echo Error: in $0 on line $LINENO' ERR
 
 
@@ -143,52 +144,36 @@ echo U_BOOT_FDT_DIR='"'"$dtbs_install_path"'"' >> ${mount_point}/writable/etc/de
 
 kernel_version=$( ls ${mount_point}/writable/boot/vmlinuz* | sed 's/vmlinuz/ /' | awk '{ print $2 }' )
 
-mount dev-live -t devtmpfs "$mountpoint/dev"
-mount devpts-live -t devpts -o nodev,nosuid "$mountpoint/dev/pts"
-mount proc-live -t proc "$mountpoint/proc"
-mount sysfs-live -t sysfs "$mountpoint/sys"
-mount securityfs -t securityfs "$mountpoint/sys/kernel/security"
 
 # 【SDDM移行対応】lxdm から sddm に変更、不要なsudoを除去
-chroot ${mount_point}/writable/ /bin/bash -c "
-systemctl enable sddm
+arch-chroot ${mount_point}/writable/ /bin/bash -c "
 systemctl enable firstboot-growroot.service
-systemctl enable NetworkManager.service
-systemctl enable systemd-timesyncd.service
+systemctl enable NetworkManager
+systemctl enable gdm 
+systemctl enable systemd-timesyncd
 "
 # ====================================================================================
 
 # User & Sudoers設定（タイポの修正とwheel自動有効化）
 # Arch Linuxでは標準で /etc/sudoers の wheel グループコメントアウトを解除します
-chroot ${mount_point}/writable/ /bin/bash -c "useradd -m -G wheel,users,video setupadmin"
+arch-chroot ${mount_point}/writable/ /bin/bash -c "useradd -m -G wheel,users,video setupadmin"
 sed -i 's/# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' ${mount_point}/writable/etc/sudoers
 sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' ${mount_point}/writable/etc/sudoers
 echo 'setupadmin ALL=(ALL) NOPASSWD: ALL' >> ${mount_point}/writable/etc/sudoers.d/setupadmin
 
-# setupadmin gui-wizard.sh 起動設定
-mkdir -p ${mount_point}/writable/home/setupadmin/.config/labwc
-echo '/usr/local/bin/gui-wizard.sh &' > ${mount_point}/writable/home/setupadmin/.config/labwc/autostart
 
 # GitHubビルド用に mkinitcpio.conf を調整 (autodetectの削除、SATAモジュールの強制追加)
 cp ${mount_point}/writable/etc/mkinitcpio.conf ${mount_point}/writable/etc/mkinitcpio.conf.org
 sed -i 's/^MODULES=(.*/MODULES=(ahci sd_mod nvme mmc_block ext4)/' ${mount_point}/writable/etc/mkinitcpio.conf
 sed -i 's/^HOOKS=(.*/HOOKS=(base systemd modconf kms keyboard sd-vconsole block filesystems fsck)/' ${mount_point}/writable/etc/mkinitcpio.conf
 
-# その後、前述した通りchroot内で再ビルド
-#chroot ${mount_point}/writable/ /bin/bash -c "mkinitcpio -P && /usr/local/bin/generate-extlinux.sh && sync"
-chroot ${mount_point}/writable/ /bin/bash -c "mkinitcpio -P && sync"
+# その後、前述した通りarch-chroot内で再ビルド
+arch-chroot ${mount_point}/writable/ /bin/bash -c "mkinitcpio -P && sync"
 
 # u-boot-update
-chroot ${mount_point}/writable/ /usr/local/sbin/u-boot-update
+arch-chroot ${mount_point}/writable/ /usr/local/sbin/u-boot-update
 sync --file-system
 sync
-
-umount "$mountpoint/sys/kernel/security"
-umount "$mountpoint/sys"
-umount "$mountpoint/proc"
-umount "$mountpoint/dev/pts"
-umount "$mountpoint/dev"
-umount "$mountpoint"
 
 # Umount partitions
 trap '' EXIT
@@ -198,7 +183,7 @@ losetup -d "${loop}"
 
 # Exit trap is no longer needed
 echo -e "\nCompressing $(basename "${img}.xz")\n"
-xz -v -9 -T0 "${img}"
+#xz -v -9 -T0 "${img}"
 #rm "${img}"
 exit 0
 
