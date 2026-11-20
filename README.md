@@ -1,5 +1,34 @@
 
-# Arch Linux ARM for Orange Pi 5 / 5-Plus (Wayland Optimized)
+# Arch Linux ARM — Minimal GNOME Desktop for Orange Pi 5 / 5 Plus
+
+A lightweight, high-performance Arch Linux ARM disk image built with a **minimal GNOME desktop configuration**—including only the bare-minimum packages needed for a fast, responsive desktop environment.
+
+> *Designed, tuned, and packaged in collaboration with an AI assistant.*
+
+## ✨ Key Features
+- **Minimal GNOME Desktop**: Stripped down to ~420 packages, eliminating bloat to achieve `labwc`-level lightness and responsiveness without sacrificing the GNOME Wayland experience.
+- **Custom Mainline Kernel (7.3 Series)**: Built with `CONFIG_ARM64_16K_PAGES=y` and `CONFIG_ARM64_VA_BITS_47=y` for optimized memory throughput and modern ARM64 performance.
+- **High Graphics Performance**: Achieves **~3660** on `glmark2-es2-wayland` out of the box (Mali-G610 / Panthor).
+- **Interactive First-Boot Setup Wizard**: On initial boot, a graphical `zenity`-based setup script automatically launches to configure your **User Account**, **Timezone**, **System Locale (`LANG`)**, and **Keyboard Layout**.
+- **Automatic Partition Expansion**: Automatically expands the root filesystem on first boot to utilize the full capacity of your SD card or NVMe SSD.
+
+## 📦 System Specifications
+- **Base OS**: Arch Linux ARM (`aarch64`)
+- **Supported Boards**: Orange Pi 5 / Orange Pi 5 Plus (RK3588 / RK3588S)
+- **Kernel**: Linux 7.3 series (`16K_PAGES`, `VA_BITS_47`)
+- **Desktop Environment**: Minimal GNOME (Wayland)
+- **Package Count**: ~420 packages
+
+## 🚀 Getting Started
+1. Flash the `.img` (or `.img.xz`) image to an SD card or NVMe SSD using `dd`, BalenaEtcher, or Raspberry Pi Imager.
+2. Insert the media and power on your Orange Pi 5 / 5 Plus.
+3. On first boot, the root partition will expand automatically, and the **Zenity Setup Wizard** will guide you through creating your user and localizing your system.
+4. Reboot or log in via GDM with your newly created account and enjoy!
+
+## 🤝 Acknowledgments
+Special thanks to my AI partner for brainstorming, package trimming, kernel configuration tuning, and scripting the first-boot setup experience together.
+
+
 
 Orange Pi 5（無印）および Orange Pi 5-Plus 向けに最適化された、カスタム Arch Linux ARM ディスクイメージの自動ビルドプロジェクトです。  
 Rockchipのハードウェア特性を最大限に活かすカスタムカーネルと、軽量・高速な Wayland デスクトップ環境をクリーンなコンテナ環境から完全自動で生成します。
@@ -16,6 +45,7 @@ Rockchipのハードウェア特性を最大限に活かすカスタムカーネ
 * **リソース最適化:** 巨大なデバッグ情報（DWARF5等）を無効化し、ビルド時のメモリ不足や容量圧迫を完全に回避。
 * **セキュアなビルド環境:** コンテナの初期化、一般ユーザー（`builder`）への適切なsudo権限付与、権限エラー（`/etc/gitconfig` 等）の根本解決を内包。
 * **高精度な分析:** ブート時間のログ解析（`systemd-analyze` 等）に基づいた、カーネルパラメーターの最適化。
+* **Linux 7.3 series (`16K_PAGES`, `VA_BITS_47`) 
 
 ### 2. 高速・軽量なカスタム Rootfs の生成
 `pacstrap` を用いたクリーンビルドコンテナにより、無駄のない洗練されたルートファイルシステムを構築します。
@@ -33,7 +63,6 @@ Rockchipのハードウェア特性を最大限に活かすカスタムカーネ
 
 * **ウインドウマネージャ:** Openboxライクで極めて軽量・軽快に動作する Wayland コンポジタ `labwc` の最適化配置。
 * **ステータスバー:** システムリソース（CPU温度、メモリ等）を美しく可視化する `waybar` の洗練されたプリセット。
-* **日本語環境:** 初回起動時からストレスなく作業に移行できる、日本語入力（Fcitx5 / Mozc 等）の完全セットアップ。
 
 ---
 
