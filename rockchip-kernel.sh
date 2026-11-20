@@ -105,7 +105,7 @@ EOF
 
 # 出来上がったパッケージをコンテナのルート「/」に配置
 cp /home/builder/kernel-org/core/linux-aarch64/linux-aarch64-rockchip-[0-9]*-aarch64.pkg.tar.* /
-cp /home/builder/kernel-org/core/linux-aarch64/linux-aarch64-rockchip-headers-[0-9]*-aarch64.pkg.tar.* /
+cp /home/builder/kernel-org/core/linux-aarch64/linux-aarch64-rockchip-[0-9]*-headers-[0-9]*-aarch64.pkg.tar.* /
 
 # ビルドログを root 権限で / に退避（base_kernel.sh が回収できるようにする）
 cp /home/builder/*.txt / 2>/dev/null || true
