@@ -82,9 +82,9 @@ CURRENT_PKGVER=$( grep ^pkgver PKGBUILD | cut -d= -f2 )
 CURRENT_PKGREL=$( grep ^pkgrel PKGBUILD | cut -d= -f2 )
 CURRENT_VERSION=$CURRENT_PKGVER-$CURRENT_PKGREL
 sed -i "s|pkgbase=linux-aarch64|pkgbase=linux-aarch64-rockchip-$CURRENT_VERSION|" PKGBUILD
-cp linux-aarch64.install linux-aarch64-rockchip-${CURRENT_VERSION}.install
+#cp linux-aarch64.install linux-aarch64-rockchip-${CURRENT_VERSION}.install
 cp linux-aarch64.install linux-aarch64-rockchip-${CURRENT_VERSION}-rockchip.install
-cp linux-aarch64-chromebook.install linux-aarch64-rockchip-${CURRENT_VERSION}-chromebook.install
+cp linux-aarch64-chromebook.install linux-aarch64-rockchip-${CURRENT_VERSION}-rockchip-chromebook.install
 
 sed -i 's|default_image="/boot/initramfs-linux.img"|default_image="/boot/initrd.img-${ALL_kver}"|' linux.preset
 updpkgsums
