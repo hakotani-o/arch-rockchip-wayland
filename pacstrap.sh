@@ -31,7 +31,7 @@ sudo pacman -S --noconfirm --root ./mnt \
 yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.5-2-rockchip-7.3.5-2-aarch64.pkg.tar.xz
 #/linux-aarch64-rockchip-7.3.5-2-7.3.5-2-aarch64.pkg.tar.xz
 #/linux-aarch64-rockchip-7.3.5-2-rockchip-7.3.5-2-aarch64.pkg.tar.xz
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.5-2--rockchip-headers-7.3.5-2-aarch64.pkg.tar.xz
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.5-2-rockchip-headers-7.3.5-2-aarch64.pkg.tar.xz
 
 
 # u-boot-update
