@@ -19,7 +19,7 @@ sudo pacman -S --noconfirm --root ./mnt \
     mkinitcpio linux-firmware util-linux \
     xorg-xwayland
 
-sudo pacman -S --noconfirm --need  --root ./mnt \
+sudo pacman -S --noconfirm --root ./mnt \
     mesa gnome-shell gnome-control-center gnome-console nautilus \
     gnome-keyring xdg-user-dirs-gtk gnome-shell-extension-appindicator \
     dosfstools mtools parted gptfdisk arch-install-scripts zstd xz
