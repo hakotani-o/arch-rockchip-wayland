@@ -28,8 +28,8 @@ sudo pacman -S --noconfirm --root ./mnt \
 
 
 # kernel (カスタムカーネルパッケージの流し込み)
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.5-1-7.3.5-1-aarch64.pkg.tar.xz
-yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.5-1-headers-7.3.5-1-aarch64.pkg.tar.xz
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.5-2-7.3.5-2-aarch64.pkg.tar.xz
+yes | sudo pacman -U --root ./mnt /linux-aarch64-rockchip-7.3.5-2-headers-7.3.5-2-aarch64.pkg.tar.xz
 
 
 # u-boot-update
