@@ -49,7 +49,7 @@ sed -i 's/INSTALL_DTBS_PATH="${pkgdir}\/boot\/dtbs"/INSTALL_DTBS_PATH="${pkgdir}
 sed -i '/conflicts=/d' ../../PKGBUILD 
 sed -i 's/echo "Installing modules..."/mv "${pkgdir}\/boot\/Image.gz" "${pkgdir}\/boot\/vmlinuz-${kernver}"\n  rm "${pkgdir}\/boot\/Image" \n\n\n echo "Installing modules..."/' ../../PKGBUILD
 #sed -i 's/unset LDFLAGS/unset LDFLAGS\n export KCFLAGS="-mcpu=cortex-a76.cortex-a55+crypto+dotprod+nosve -fno-plt" \n/' ../../PKGBUILD
-sed -i 's/unset LDFLAGS/unset LDFLAGS\n export KCFLAGS="-mcpu=native" \n export MAKEFLAGS="V=1"\n/' ../../PKGBUILD
+sed -i 's/unset LDFLAGS/unset LDFLAGS\n export KCFLAGS="-mcpu=cortex-a76.cortex-a55+crypto+dotprod+nosve -fno-plt" \n export MAKEFLAGS="V=1"\n/' ../../PKGBUILD
 
 
 #make defconfig
